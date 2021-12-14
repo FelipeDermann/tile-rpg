@@ -42,11 +42,10 @@ public class PlayerControls : MonoBehaviour
     {
         input = new PlayerInput();
 
-        input.Battle.Movement.performed += ctx => inputDirection = ctx.ReadValue<Vector2>();
         input.Battle.Movement.performed += ctx =>
         {
             if (ctx.interaction is PressInteraction)
-                MoveArrow();
+                MoveArrow(ctx.ReadValue<Vector2>());
         };
     }
 
@@ -65,10 +64,9 @@ public class PlayerControls : MonoBehaviour
         Debug.Log(tileManager.battleTiles[0, 0].gameObject.name);
     }
 
-    void MoveArrow()
+    void MoveArrow(Vector2 inputDirection)
     {
-        //if (movingArrow) return;
-        //movingArrow = true;
+        Debug.Log("CAUE");
 
         Vector2 input = new Vector2(inputDirection.x, inputDirection.y);
         Vector2 direction = new Vector2(Mathf.Sign(input.x), Mathf.Sign(input.y));
@@ -83,11 +81,6 @@ public class PlayerControls : MonoBehaviour
         BattleTile targetTile = tileManager.CheckTile((int)tileToGo.x, (int)tileToGo.y);
         if (targetTile != null)
             SetArrowPos(targetTile.row, targetTile.column);
-
-        //StartCoroutine(nameof(MoveArrowCoroutine));
-
-        //Debug.Log((int)direction.x + " and " + (int)direction.y);
-        //Debug.Log(tileToGo);
     }
 
     IEnumerator MoveArrowCoroutine()

@@ -33,7 +33,7 @@ public class TileManager : MonoBehaviour
 
         targetTile = battleTiles[_row, _column];
 
-        if (battleTiles[_row, _column].tileType == TileTypes.NullTile) 
+        if (battleTiles[_row, _column].tileType == TileType.NullTile) 
             targetTile = null;
 
         return targetTile;

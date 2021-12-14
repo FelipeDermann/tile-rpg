@@ -8,16 +8,20 @@ using UnityEditor;
 [SelectionBase]
 public class BattleTile : MonoBehaviour
 {
+    [Header("Hex Info")]
+    public Unit unitStandingOnHex;
+
     [Header("Hex Config")]
-    public TileTypes tileType;
+    public TileType tileType;
     public int orderInLayer;
 
     [Header("Debug info")]
     public int row, column;
 
     [Header("References")]
-    public TileDefinitions tileDefinitions;
+    public ScriptTileDefinitions tileDefinitions;
     public Transform hexSpriteParent;
+    public Transform unitTransformPosition;
 
     public void SetArrayPos(int _row, int _column)
     {
@@ -25,25 +29,30 @@ public class BattleTile : MonoBehaviour
         column = _column;
     }
 
+    public void ChangeCurrentUnit(Unit _newUnit)
+    {
+        unitStandingOnHex = _newUnit;
+    }
+
     void OnValidate()
     {
         switch (tileType)
         {
-            case TileTypes.AllyTile: 
+            case TileType.AllyTile: 
                 hexSpriteParent.GetChild(0).GetComponent<SpriteRenderer>().color = tileDefinitions.allyTileColor;
                 break;
-            case TileTypes.EnemyTile:
+            case TileType.EnemyTile:
                 hexSpriteParent.GetChild(0).GetComponent<SpriteRenderer>().color = tileDefinitions.enemyTileColor;
                 break;
-            case TileTypes.NeutralTile:
+            case TileType.NeutralTile:
                 hexSpriteParent.GetChild(0).GetComponent<SpriteRenderer>().color = tileDefinitions.neutralTileColor;
                 break;
-            case TileTypes.NullTile:
+            case TileType.NullTile:
                 ChangeHexSprite(false);
                 break;
         }
 
-        if (tileType != TileTypes.NullTile)
+        if (tileType != TileType.NullTile)
             ChangeHexSprite(true);           
     }
 
