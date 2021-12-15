@@ -5,6 +5,11 @@ using UnityEngine.InputSystem.Interactions;
 
 public class PlayerControls : MonoBehaviour
 {
+    [Header("Selection Info")]
+    public BattleTile highlightedTile;
+    public BattleTile previousHighlitedTile;
+    public BattleTile selectedTile;
+
     [Header("Player Info")]
     public int currentRow;
     public int currentColumn;
@@ -51,6 +56,8 @@ public class PlayerControls : MonoBehaviour
 
     void StartPlayerControls()
     {
+        highlightedTile = tileManager.battleTiles[1,3];
+        highlightedTile.StartHighlight();
         SetArrowPos(1,3);
     }
 
@@ -66,8 +73,6 @@ public class PlayerControls : MonoBehaviour
 
     void MoveArrow(Vector2 inputDirection)
     {
-        Debug.Log("CAUE");
-
         Vector2 input = new Vector2(inputDirection.x, inputDirection.y);
         Vector2 direction = new Vector2(Mathf.Sign(input.x), Mathf.Sign(input.y));
 
@@ -80,7 +85,19 @@ public class PlayerControls : MonoBehaviour
         Vector2 tileToGo = new Vector2(currentRow - direction.y, currentColumn + direction.x);
         BattleTile targetTile = tileManager.CheckTile((int)tileToGo.x, (int)tileToGo.y);
         if (targetTile != null)
+        {
+            HighlightedTile(targetTile);
             SetArrowPos(targetTile.row, targetTile.column);
+        }
+    }
+
+    void HighlightedTile(BattleTile targetTile)
+    { 
+        previousHighlitedTile = highlightedTile;
+        previousHighlitedTile.StopHighlight();
+        
+        highlightedTile = targetTile;
+        highlightedTile.StartHighlight();
     }
 
     IEnumerator MoveArrowCoroutine()

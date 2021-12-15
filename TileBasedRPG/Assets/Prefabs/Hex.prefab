@@ -131,11 +131,13 @@ MonoBehaviour:
   unitStandingOnHex: {fileID: 0}
   tileType: 0
   orderInLayer: 0
+  highlightFadeDuration: 0.5
   row: 0
   column: 0
   tileDefinitions: {fileID: 11400000, guid: 559a0f00721006e408aee5cdc758e02f, type: 2}
   hexSpriteParent: {fileID: 2011007640528988530}
   unitTransformPosition: {fileID: 210311985961235796}
+  originalColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &3720613803334798143
 GameObject:
   m_ObjectHideFlags: 0
@@ -271,7 +273,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -4395136831817595176, guid: e2271794fff734f4fb81e6aa3e9181ef, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.8723384, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

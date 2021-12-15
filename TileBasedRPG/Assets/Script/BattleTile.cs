@@ -14,6 +14,7 @@ public class BattleTile : MonoBehaviour
     [Header("Hex Config")]
     public TileType tileType;
     public int orderInLayer;
+    public float highlightFadeDuration;
 
     [Header("Debug info")]
     public int row, column;
@@ -22,6 +23,16 @@ public class BattleTile : MonoBehaviour
     public ScriptTileDefinitions tileDefinitions;
     public Transform hexSpriteParent;
     public Transform unitTransformPosition;
+
+    SpriteRenderer hexSprite;
+    public Color originalColor;
+    bool stopHighlight;
+
+    void Start()
+    {
+        hexSprite = hexSpriteParent.GetChild(0).GetComponent<SpriteRenderer>();
+        originalColor = hexSprite.color;
+    }
 
     public void SetArrayPos(int _row, int _column)
     {
@@ -32,6 +43,46 @@ public class BattleTile : MonoBehaviour
     public void ChangeCurrentUnit(Unit _newUnit)
     {
         unitStandingOnHex = _newUnit;
+    }
+
+    public void StartHighlight()
+    {
+        StopCoroutine(HighlightEffect());
+        StartCoroutine(HighlightEffect());
+    }
+    
+    public void StopHighlight()
+    {
+        stopHighlight = true;
+    }
+
+    IEnumerator HighlightEffect()
+    {
+        Color targetColor = Color.white;
+        Color colorToGive = Color.white;
+        hexSprite.color = colorToGive;
+
+        bool backToOriginalColor = false;
+        float t = 0;
+
+        while (!stopHighlight)
+        {
+            if (!backToOriginalColor) colorToGive = Color.Lerp(targetColor, originalColor, t);
+            else colorToGive = Color.Lerp(originalColor, targetColor, t);
+
+            t += Time.deltaTime / highlightFadeDuration;
+            if (t >= highlightFadeDuration)
+            {
+                backToOriginalColor = !backToOriginalColor;
+                t = 0;
+            }
+
+            hexSprite.color = colorToGive;
+            yield return null;
+        }
+
+        stopHighlight = false;
+        hexSprite.color = originalColor;
     }
 
     void OnValidate()
