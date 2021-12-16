@@ -28,13 +28,16 @@ public class Unit : MonoBehaviour
         currentEnergy = stats.energy;
 
         currentTile = _tileToSpawnAt;
-        _tileToSpawnAt.unitStandingOnHex = this;
-
-        transform.position = _tileToSpawnAt.unitTransformPosition.position;
-        characterSprite.sortingOrder = _tileToSpawnAt.orderInLayer + 1;
-        shadowSprite.sortingOrder = characterSprite.sortingOrder - 1;
+        _tileToSpawnAt.ChangeCurrentUnit(this);
 
         facingSide = FacingSide.FacingRight;
+    }
+
+    public void ChangePhysicalPosition(BattleTile _newTile)
+    {
+        transform.position = _newTile.unitTransformPosition.position;
+        characterSprite.sortingOrder = _newTile.orderInLayer + 1;
+        shadowSprite.sortingOrder = characterSprite.sortingOrder - 1;
     }
 
     public void ChangeSide(FacingSide _newSide)
@@ -45,5 +48,10 @@ public class Unit : MonoBehaviour
             characterSprite.flipX = false;
         else
             characterSprite.flipX = true;
+    }
+
+    public void ChangeType(UnitType _newType)
+    {
+        unitType = _newType;
     }
 }

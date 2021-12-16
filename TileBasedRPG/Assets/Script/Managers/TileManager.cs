@@ -6,6 +6,8 @@ using UnityEngine;
 [System.Serializable]
 public class TileManager : MonoBehaviour
 {
+    public static TileManager Instance;
+
     public static event Action TilesSetUpComplete;
 
     public BattleTile[,] battleTiles;
@@ -15,6 +17,18 @@ public class TileManager : MonoBehaviour
     public Vector3 hexSpacing;
     public int rows;
     public int columns;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void Start()
     {
@@ -50,7 +64,7 @@ public class TileManager : MonoBehaviour
                 Debug.Log("Hex Name: " + battleTiles[r, c].gameObject.name);
             }
         }
-        TilesSetUpComplete();
+        TilesSetUpComplete?.Invoke();
     }
 
     public void BattlefieldGeneratorEditor()

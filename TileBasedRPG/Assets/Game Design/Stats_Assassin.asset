@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b9b9569254d65ac469875d1b8ca8c462, type: 3}
-  m_Name: TestStats
+  m_Name: Stats_Assassin
   m_EditorClassIdentifier: 
+  unitName: Assassin
   health: 100
   energy: 80
   attack: 40

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem.Interactions;
 
-public class PlayerControls : MonoBehaviour
+public class ControlsManager : MonoBehaviour
 {
+    public static ControlsManager Instance;
+
     [Header("Selection Info")]
     public BattleTile highlightedTile;
     public BattleTile previousHighlitedTile;
@@ -18,9 +20,6 @@ public class PlayerControls : MonoBehaviour
     public GameObject arrow;
     public Vector3 arrowHexOffset;
 
-    [Header("References")]
-    public TileManager tileManager;
-
     [Header("Debug Info")]
     [SerializeField]
     Vector2 inputDirection;
@@ -33,18 +32,29 @@ public class PlayerControls : MonoBehaviour
 
     void OnEnable()
     {
-        TileManager.TilesSetUpComplete += StartPlayerControls;
-        input.Battle.Enable();
+        //TileManager.TilesSetUpComplete += StartPlayerControls;
+        InterfaceManager.PreparationPhaseStarted += StartPlayerControls;
+        //input.Battle.Enable();
     }
 
     void OnDisable()
     {
-        TileManager.TilesSetUpComplete -= StartPlayerControls;
+        //TileManager.TilesSetUpComplete -= StartPlayerControls;
+        InterfaceManager.PreparationPhaseStarted -= StartPlayerControls;
         input.Battle.Disable();
     }
 
     private void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
         input = new PlayerInput();
 
         input.Battle.Movement.performed += ctx =>
@@ -52,11 +62,53 @@ public class PlayerControls : MonoBehaviour
             if (ctx.interaction is PressInteraction)
                 MoveArrow(ctx.ReadValue<Vector2>());
         };
+
+        input.Battle.Accept.started += ctx => AcceptButtonPressed();
+        input.Battle.Cancel.started += ctx => CancelButtonPressed();
+
+    }
+
+    void CancelButtonPressed()
+    {
+
+    }
+
+    void AcceptButtonPressed()
+    {
+        if (selectedTile != null)
+        {
+            if (highlightedTile.tileType != TileType.AllyTile) return;
+            PlaceUnit();
+        }
+        else
+        {
+            if (highlightedTile.tileType != TileType.AllyTile) return;
+            if (highlightedTile.UnitStandingOnHex == null) return;
+            PickUpUnit();
+        }
+    }
+
+    void PickUpUnit()
+    {
+        selectedTile = highlightedTile;
+        selectedTile.ChangeCurrentUnit(highlightedTile.UnitStandingOnHex);
+    }
+
+    void PlaceUnit()
+    {
+        Unit unitToSwapWith = highlightedTile.UnitStandingOnHex;
+        highlightedTile.ChangeCurrentUnit(selectedTile.UnitStandingOnHex);
+
+        selectedTile.ChangeCurrentUnit(unitToSwapWith);
+        selectedTile = null;
     }
 
     void StartPlayerControls()
     {
-        highlightedTile = tileManager.battleTiles[1,3];
+        arrow.gameObject.SetActive(true);
+        input.Battle.Enable();
+
+        highlightedTile = TileManager.Instance.battleTiles[1,3];
         highlightedTile.StartHighlight();
         SetArrowPos(1,3);
     }
@@ -66,9 +118,9 @@ public class PlayerControls : MonoBehaviour
         currentRow = _row;
         currentColumn = _column;
 
-        arrow.transform.position = tileManager.battleTiles[_row, _column].transform.position 
+        arrow.transform.position = TileManager.Instance.battleTiles[_row, _column].transform.position 
             + arrowHexOffset;
-        Debug.Log(tileManager.battleTiles[0, 0].gameObject.name);
+        Debug.Log(TileManager.Instance.battleTiles[0, 0].gameObject.name);
     }
 
     void MoveArrow(Vector2 inputDirection)
@@ -83,7 +135,7 @@ public class PlayerControls : MonoBehaviour
 
         //moving vertically changes rows, moving horizontally changes columns!!!
         Vector2 tileToGo = new Vector2(currentRow - direction.y, currentColumn + direction.x);
-        BattleTile targetTile = tileManager.CheckTile((int)tileToGo.x, (int)tileToGo.y);
+        BattleTile targetTile = TileManager.Instance.CheckTile((int)tileToGo.x, (int)tileToGo.y);
         if (targetTile != null)
         {
             HighlightedTile(targetTile);

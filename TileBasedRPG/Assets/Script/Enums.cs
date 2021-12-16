@@ -20,3 +20,10 @@ public enum FacingSide
     FacingLeft
 }
 
+public enum BattlePhase
+{
+    PreparationPhase,
+    ExecutionPhase,
+    EnemyPhase
+}
+

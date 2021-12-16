@@ -4,9 +4,28 @@ using UnityEngine;
 
 public class BattleManager : MonoBehaviour
 {
+    public static BattleManager Instance { get; private set; }
+
+    [SerializeField]
+    private BattlePhase battlePhase;
+
+    public BattlePhase BattlePhase{ get { return battlePhase;}}
+
+    [Header("Units to Spawn")]
     public List<Unit> allyUnitsToSpawn;
     public List<Unit> enemyUnitsToSpawn;
-    public TileManager tileManager;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void OnEnable()
     {
@@ -31,7 +50,7 @@ public class BattleManager : MonoBehaviour
         foreach (Unit unit in allyUnitsToSpawn)
         {
             var spawnedUnit = Instantiate(unit);
-            spawnedUnit.InitiateUnit(tileManager.battleTiles[count, 0]);
+            spawnedUnit.InitiateUnit(TileManager.Instance.battleTiles[count, 0]);
             spawnedUnit.transform.SetParent(parentObj.transform);
 
             count++;
@@ -45,9 +64,10 @@ public class BattleManager : MonoBehaviour
         foreach (Unit unit in enemyUnitsToSpawn)
         {
             var spawnedUnit = Instantiate(unit);
-            spawnedUnit.InitiateUnit(tileManager.battleTiles[count, tileManager.columns-1]);
+            spawnedUnit.InitiateUnit(TileManager.Instance.battleTiles[count, TileManager.Instance.columns-1]);
             spawnedUnit.transform.SetParent(parentObj.transform);
             spawnedUnit.ChangeSide(FacingSide.FacingLeft);
+            spawnedUnit.ChangeType(UnitType.EnemyUnit);
 
             count++;
         }

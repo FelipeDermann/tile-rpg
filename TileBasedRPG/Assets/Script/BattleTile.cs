@@ -9,7 +9,13 @@ using UnityEditor;
 public class BattleTile : MonoBehaviour
 {
     [Header("Hex Info")]
-    public Unit unitStandingOnHex;
+    [SerializeField]
+    private Unit unitStandingOnHex;
+
+    public Unit UnitStandingOnHex
+    {
+        get { return unitStandingOnHex; }
+    }
 
     [Header("Hex Config")]
     public TileType tileType;
@@ -43,6 +49,9 @@ public class BattleTile : MonoBehaviour
     public void ChangeCurrentUnit(Unit _newUnit)
     {
         unitStandingOnHex = _newUnit;
+        if (_newUnit == null) return;
+
+        _newUnit.ChangePhysicalPosition(this);
     }
 
     public void StartHighlight()
