@@ -41,6 +41,30 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""End Turn"",
+                    ""type"": ""Button"",
+                    ""id"": ""15ac76ec-3969-4b4f-a570-b1bce3e64a99"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=2)""
+                },
+                {
+                    ""name"": ""Button East"",
+                    ""type"": ""Button"",
+                    ""id"": ""c2b9c5e3-d62a-42b8-8192-e4f1000295c3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=2)""
+                },
+                {
+                    ""name"": ""Swap"",
+                    ""type"": ""Value"",
+                    ""id"": ""6fc846df-adcb-4018-92ab-7fb2dba59ff0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -164,6 +188,72 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""86b920db-603a-4d4a-835b-9407520582de"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""End Turn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ec8ea8b6-a956-4fd2-8793-b6691f8b3705"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""End Turn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d5445fe1-8a93-4984-8307-fae55c72b99b"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Button East"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""2ae41f00-5f9c-4fb3-9b26-16e7935074a3"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Swap"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""a46d0ed9-8a54-4ec2-8014-bda251c1c233"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Swap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""9160bc6a-5a2c-437e-91bd-9a00de5cebf6"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Swap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -203,6 +293,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         m_Battle_Movement = m_Battle.FindAction("Movement", throwIfNotFound: true);
         m_Battle_Accept = m_Battle.FindAction("Accept", throwIfNotFound: true);
         m_Battle_Cancel = m_Battle.FindAction("Cancel", throwIfNotFound: true);
+        m_Battle_EndTurn = m_Battle.FindAction("End Turn", throwIfNotFound: true);
+        m_Battle_ButtonEast = m_Battle.FindAction("Button East", throwIfNotFound: true);
+        m_Battle_Swap = m_Battle.FindAction("Swap", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -255,6 +348,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     private readonly InputAction m_Battle_Movement;
     private readonly InputAction m_Battle_Accept;
     private readonly InputAction m_Battle_Cancel;
+    private readonly InputAction m_Battle_EndTurn;
+    private readonly InputAction m_Battle_ButtonEast;
+    private readonly InputAction m_Battle_Swap;
     public struct BattleActions
     {
         private @PlayerInput m_Wrapper;
@@ -262,6 +358,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         public InputAction @Movement => m_Wrapper.m_Battle_Movement;
         public InputAction @Accept => m_Wrapper.m_Battle_Accept;
         public InputAction @Cancel => m_Wrapper.m_Battle_Cancel;
+        public InputAction @EndTurn => m_Wrapper.m_Battle_EndTurn;
+        public InputAction @ButtonEast => m_Wrapper.m_Battle_ButtonEast;
+        public InputAction @Swap => m_Wrapper.m_Battle_Swap;
         public InputActionMap Get() { return m_Wrapper.m_Battle; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -280,6 +379,15 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Cancel.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnCancel;
                 @Cancel.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnCancel;
                 @Cancel.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnCancel;
+                @EndTurn.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnEndTurn;
+                @EndTurn.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnEndTurn;
+                @EndTurn.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnEndTurn;
+                @ButtonEast.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnButtonEast;
+                @ButtonEast.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnButtonEast;
+                @ButtonEast.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnButtonEast;
+                @Swap.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnSwap;
+                @Swap.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnSwap;
+                @Swap.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnSwap;
             }
             m_Wrapper.m_BattleActionsCallbackInterface = instance;
             if (instance != null)
@@ -293,6 +401,15 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Cancel.started += instance.OnCancel;
                 @Cancel.performed += instance.OnCancel;
                 @Cancel.canceled += instance.OnCancel;
+                @EndTurn.started += instance.OnEndTurn;
+                @EndTurn.performed += instance.OnEndTurn;
+                @EndTurn.canceled += instance.OnEndTurn;
+                @ButtonEast.started += instance.OnButtonEast;
+                @ButtonEast.performed += instance.OnButtonEast;
+                @ButtonEast.canceled += instance.OnButtonEast;
+                @Swap.started += instance.OnSwap;
+                @Swap.performed += instance.OnSwap;
+                @Swap.canceled += instance.OnSwap;
             }
         }
     }
@@ -320,5 +437,8 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnAccept(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
+        void OnEndTurn(InputAction.CallbackContext context);
+        void OnButtonEast(InputAction.CallbackContext context);
+        void OnSwap(InputAction.CallbackContext context);
     }
 }

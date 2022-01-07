@@ -27,3 +27,19 @@ public enum BattlePhase
     EnemyPhase
 }
 
+public enum SkillType
+{
+    None,
+    Heal,
+    Attack,
+    Defense,
+    Buff,
+    Debuff,
+    Ailment,
+    Hazard,
+    Move,
+    Steal,
+    Obstacle,
+    Unknown
+}
+

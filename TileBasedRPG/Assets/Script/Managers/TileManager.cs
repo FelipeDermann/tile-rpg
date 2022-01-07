@@ -61,7 +61,6 @@ public class TileManager : MonoBehaviour
             for (int c = 0; c < columns; c++)
             {
                 battleTiles[r, c] = transform.GetChild(r).transform.GetChild(c).GetComponent<BattleTile>();
-                Debug.Log("Hex Name: " + battleTiles[r, c].gameObject.name);
             }
         }
         TilesSetUpComplete?.Invoke();

@@ -2,42 +2,54 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[SelectionBase]
 public class Unit : MonoBehaviour
 {
     [Header("Unit Info")]
     public UnitType unitType;
     public FacingSide facingSide;
-    public int currentHealth;
-    public int currentEnergy;
     public BattleTile currentTile;
 
-    [Header("References")]
-    public ScriptUnitStats stats;
+    [Header("Object References")]
     public SpriteRenderer characterSprite;
     public SpriteRenderer shadowSprite;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
+    [Header("Script References")]
+    public UnitSkills unitSkills;
+    public UnitUI unitUI;
+    public UnitStats unitStats;
 
     public void InitiateUnit(BattleTile _tileToSpawnAt)
     {
-        currentHealth = stats.health;
-        currentEnergy = stats.energy;
+        AssignEvents();
+        AssignFirstTile(_tileToSpawnAt);
 
-        currentTile = _tileToSpawnAt;
-        _tileToSpawnAt.ChangeCurrentUnit(this);
+        unitStats.InitiateStats();
+        unitSkills.SetFirstSkill();
 
         facingSide = FacingSide.FacingRight;
+    }
+
+    void AssignEvents()
+    {
+        unitSkills.SkillChanged += unitUI.UpdateSkillText;
+    }
+
+    void AssignFirstTile(BattleTile _tileToSpawnAt)
+    {
+        currentTile = _tileToSpawnAt;
+        _tileToSpawnAt.ChangeCurrentUnit(this);
     }
 
     public void ChangePhysicalPosition(BattleTile _newTile)
     {
         transform.position = _newTile.unitTransformPosition.position;
-        characterSprite.sortingOrder = _newTile.orderInLayer + 1;
+
+        int newSortingOrder = _newTile.orderInLayer;
+        characterSprite.sortingOrder = newSortingOrder + 1;
         shadowSprite.sortingOrder = characterSprite.sortingOrder - 1;
+
+        unitUI.ChangeSortingOrder(newSortingOrder+2);
     }
 
     public void ChangeSide(FacingSide _newSide)

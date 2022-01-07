@@ -26,13 +26,12 @@ public class BattleTile : MonoBehaviour
     public int row, column;
 
     [Header("References")]
-    public ScriptTileDefinitions tileDefinitions;
+    public ScriptableTileDefinitions tileDefinitions;
     public Transform hexSpriteParent;
     public Transform unitTransformPosition;
 
     SpriteRenderer hexSprite;
     public Color originalColor;
-    bool stopHighlight;
 
     void Start()
     {
@@ -52,46 +51,6 @@ public class BattleTile : MonoBehaviour
         if (_newUnit == null) return;
 
         _newUnit.ChangePhysicalPosition(this);
-    }
-
-    public void StartHighlight()
-    {
-        StopCoroutine(HighlightEffect());
-        StartCoroutine(HighlightEffect());
-    }
-    
-    public void StopHighlight()
-    {
-        stopHighlight = true;
-    }
-
-    IEnumerator HighlightEffect()
-    {
-        Color targetColor = Color.white;
-        Color colorToGive = Color.white;
-        hexSprite.color = colorToGive;
-
-        bool backToOriginalColor = false;
-        float t = 0;
-
-        while (!stopHighlight)
-        {
-            if (!backToOriginalColor) colorToGive = Color.Lerp(targetColor, originalColor, t);
-            else colorToGive = Color.Lerp(originalColor, targetColor, t);
-
-            t += Time.deltaTime / highlightFadeDuration;
-            if (t >= highlightFadeDuration)
-            {
-                backToOriginalColor = !backToOriginalColor;
-                t = 0;
-            }
-
-            hexSprite.color = colorToGive;
-            yield return null;
-        }
-
-        stopHighlight = false;
-        hexSprite.color = originalColor;
     }
 
     void OnValidate()

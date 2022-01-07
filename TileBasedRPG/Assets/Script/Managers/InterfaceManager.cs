@@ -30,6 +30,22 @@ public class InterfaceManager : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
+    public void PlayNewBattlePhaseAnim(BattlePhase phase)
+    {
+        if (phase == BattlePhase.ExecutionPhase) ExecutionPhaseAnim();
+        else PreparationPhaseAnim();
+    }
+
+    void PreparationPhaseAnim()
+    {
+        anim.SetTrigger("PreparationPhase");
+    }
+
+    void ExecutionPhaseAnim()
+    {
+        anim.SetTrigger("ExecutionPhase");
+    }
+
     public void BattleStartedAnimEnd()
     {
         BattleStarted?.Invoke();

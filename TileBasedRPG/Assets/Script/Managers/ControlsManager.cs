@@ -7,6 +7,9 @@ public class ControlsManager : MonoBehaviour
 {
     public static ControlsManager Instance;
 
+    [Header("Configurable")]
+    public ScriptableGameDefinitions gameDefinitions;
+
     [Header("Selection Info")]
     public BattleTile highlightedTile;
     public BattleTile previousHighlitedTile;
@@ -16,19 +19,17 @@ public class ControlsManager : MonoBehaviour
     public int currentRow;
     public int currentColumn;
 
-    [Header("Selection Arrow")]
+    [Header("Visual Aid")]
+    public HexHighlight hexHighlight;
     public GameObject arrow;
     public Vector3 arrowHexOffset;
 
     [Header("Debug Info")]
-    [SerializeField]
     Vector2 inputDirection;
-    [SerializeField]
     bool movingArrow;
-    [SerializeField]
-    public float arrowMoveDelay;
 
     PlayerInput input;
+    Coroutine endTurnCo;
 
     void OnEnable()
     {
@@ -63,6 +64,24 @@ public class ControlsManager : MonoBehaviour
                 MoveArrow(ctx.ReadValue<Vector2>());
         };
 
+        input.Battle.EndTurn.performed += ctx =>
+        {
+            if (ctx.interaction is PressInteraction)
+            {
+                if (ctx.ReadValue<float>() > 0)
+                    EndTurnHold();
+                else
+                    EndTurnReleased();
+            }
+        };
+
+        input.Battle.Swap.performed += ctx =>
+        {
+            SwapUnitCurrentSkill(ctx.ReadValue<float>());
+        };
+
+        //input.Battle.ButtonEast.performed += ctx => EndTurnHold();
+
         input.Battle.Accept.started += ctx => AcceptButtonPressed();
         input.Battle.Cancel.started += ctx => CancelButtonPressed();
 
@@ -71,6 +90,35 @@ public class ControlsManager : MonoBehaviour
     void CancelButtonPressed()
     {
 
+    }
+
+    void SwapUnitCurrentSkill(float swapDirection)
+    {
+        Unit unitSelected = highlightedTile.UnitStandingOnHex;
+        if (unitSelected == null || unitSelected.unitType != UnitType.AllyUnit) return;
+
+        unitSelected.unitSkills.ChangeCurrentSkill((int)swapDirection);
+    }
+
+    void EndTurnHold()
+    {
+        if (selectedTile != null) return;
+        endTurnCo = StartCoroutine(EndTurnCount());
+    }
+
+    void EndTurnReleased()
+    {
+        if (selectedTile != null) return;
+        StopCoroutine(endTurnCo);
+        Debug.Log("Turn Ending Cancelled!");
+    }
+
+    IEnumerator EndTurnCount()
+    {
+        Debug.Log("Trying to end the turn");
+        yield return new WaitForSeconds(gameDefinitions.endTurnButtonHoldTime);
+        Debug.Log("Preparation Phase is Over!");
+        BattleManager.Instance.ChangeBattlePhase(BattlePhase.ExecutionPhase);
     }
 
     void AcceptButtonPressed()
@@ -105,12 +153,31 @@ public class ControlsManager : MonoBehaviour
 
     void StartPlayerControls()
     {
+        InterfaceManager.PreparationPhaseStarted -= StartPlayerControls;
+        Debug.Log("START CONTROLS");
         arrow.gameObject.SetActive(true);
         input.Battle.Enable();
 
         highlightedTile = TileManager.Instance.battleTiles[1,3];
-        highlightedTile.StartHighlight();
         SetArrowPos(1,3);
+
+        hexHighlight.ChangeActiveState(true);
+    }
+
+    public void EnablePlayerControls()
+    {
+        arrow.gameObject.SetActive(true);
+        input.Battle.Enable();
+
+        hexHighlight.ChangeActiveState(true);
+    }
+
+    public void DisablePlayerControls()
+    {
+        arrow.gameObject.SetActive(false);
+        input.Battle.Disable();
+
+        hexHighlight.ChangeActiveState(false);
     }
 
     void SetArrowPos(int _row, int _column)
@@ -120,7 +187,8 @@ public class ControlsManager : MonoBehaviour
 
         arrow.transform.position = TileManager.Instance.battleTiles[_row, _column].transform.position 
             + arrowHexOffset;
-        Debug.Log(TileManager.Instance.battleTiles[0, 0].gameObject.name);
+
+        hexHighlight.ChangePosition(highlightedTile.transform.position, highlightedTile.orderInLayer);
     }
 
     void MoveArrow(Vector2 inputDirection)
@@ -146,15 +214,13 @@ public class ControlsManager : MonoBehaviour
     void HighlightedTile(BattleTile targetTile)
     { 
         previousHighlitedTile = highlightedTile;
-        previousHighlitedTile.StopHighlight();
         
         highlightedTile = targetTile;
-        highlightedTile.StartHighlight();
     }
 
     IEnumerator MoveArrowCoroutine()
     {
-        yield return new WaitForSeconds(arrowMoveDelay);
+        yield return new WaitForSeconds(gameDefinitions.arrowMoveDelay);
         movingArrow = false;
     }
 }
