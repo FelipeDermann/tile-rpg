@@ -5,6 +5,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+[System.Serializable]
+public struct HexPos
+{
+    public int row, column;
+
+    public HexPos(int _row, int _column)
+    {
+        row = _row;
+        column = _column;
+    }
+}
+
 [SelectionBase]
 public class BattleTile : MonoBehaviour
 {
@@ -23,7 +35,7 @@ public class BattleTile : MonoBehaviour
     public float highlightFadeDuration;
 
     [Header("Debug info")]
-    public int row, column;
+    public HexPos hexPos;
 
     [Header("References")]
     public ScriptableTileDefinitions tileDefinitions;
@@ -41,8 +53,8 @@ public class BattleTile : MonoBehaviour
 
     public void SetArrayPos(int _row, int _column)
     {
-        row = _row;
-        column = _column;
+        hexPos.row = _row;
+        hexPos.column = _column;
     }
 
     public void ChangeCurrentUnit(Unit _newUnit)
@@ -50,7 +62,7 @@ public class BattleTile : MonoBehaviour
         unitStandingOnHex = _newUnit;
         if (_newUnit == null) return;
 
-        _newUnit.ChangePhysicalPosition(this);
+        _newUnit.ChangeCurrentTile(this);
     }
 
     void OnValidate()

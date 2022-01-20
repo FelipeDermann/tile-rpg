@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class InterfaceManager : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class InterfaceManager : MonoBehaviour
     public static event Action ExecutionPhaseStarted;
 
     Animator anim;
+
+    public TextMeshProUGUI skillNameText;
 
     private void Awake()
     {
@@ -59,5 +62,16 @@ public class InterfaceManager : MonoBehaviour
     public void ExecutionPhaseAnimEnd()
     {
         ExecutionPhaseStarted?.Invoke();
+    }
+
+    public void PlaySkillNameAnim(ScriptableSkillStats skillStats)
+    {
+        skillNameText.text = "<sprite name=" + skillStats.skillType.ToString() + ">" + " " + skillStats.skillName;
+        anim.SetTrigger("SkillNameStart");
+    }
+
+    public void PlaySkillNameEndAnim()
+    {
+        anim.SetTrigger("SkillNameEnd");
     }
 }

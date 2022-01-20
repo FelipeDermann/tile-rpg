@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,16 +7,26 @@ using UnityEngine;
 public class SkillBase : MonoBehaviour
 {
     public ScriptableSkillStats skillStats;
+    public Unit unit;
 
-    private float energyCost;
-    private float cooldown;
-
-    private float powerScaling;
-    private float aidScaling;
-    private float techScaling;
-
-    public virtual void ExecuteSkill()
+    public virtual void StartSkill()
     {
-        Debug.Log("Skill Executed: Base Skill");
+        Debug.Log(unit.unitStats.unitName + " Starting Skill: " + skillStats.skillName);
+        InterfaceManager.Instance.PlaySkillNameAnim(skillStats);
+
+        ExecuteSkill();
+    }
+
+    protected virtual void ExecuteSkill()
+    {
+        Debug.Log(unit.unitStats.unitName + " Executed Skill: " + skillStats.skillName);
+        unit.SkillExecutionEndedEvent();
+    }
+
+    //when a unit's skill changes, check if skill modifies 
+    //something during the planning phase
+    public virtual void PlanningPhaseMethod()
+    {
+
     }
 }

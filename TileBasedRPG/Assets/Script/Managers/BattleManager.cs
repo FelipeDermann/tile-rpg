@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BattleManager : MonoBehaviour
 {
+    public static event Action<bool> TurnOffUnitUI;
     public static BattleManager Instance { get; private set; }
 
     [SerializeField]
@@ -47,6 +49,7 @@ public class BattleManager : MonoBehaviour
         TileManager.TilesSetUpComplete += SpawnUnits;
         InterfaceManager.ExecutionPhaseStarted += ExecutionPhase;
         InterfaceManager.PreparationPhaseStarted += PreparationPhase;
+        Unit.SkillExecutionEnded += AllowNextUnitToAct;
     }
 
     void OnDisable()
@@ -54,11 +57,13 @@ public class BattleManager : MonoBehaviour
         TileManager.TilesSetUpComplete -= SpawnUnits;
         InterfaceManager.ExecutionPhaseStarted -= ExecutionPhase;
         InterfaceManager.PreparationPhaseStarted -= PreparationPhase;
+        Unit.SkillExecutionEnded -= AllowNextUnitToAct;
     }
 
     public void ChangeBattlePhase(BattlePhase phase)
     {
         battlePhase = phase;
+        TurnOffUnitUI?.Invoke(false);
         ControlsManager.Instance.DisablePlayerControls();
         InterfaceManager.Instance.PlayNewBattlePhaseAnim(battlePhase);
     }
@@ -80,8 +85,35 @@ public class BattleManager : MonoBehaviour
 
     void ExecutionPhase()
     {
-        //logic to execute all unit's moves in order
+        Debug.Log("EXECUTION PHASE STARTED!");
+        AllowNextUnitToAct();
+    }
+
+    void AllowNextUnitToAct()
+    {
+        StartCoroutine(ExecuteUnitSkill());
+    }
+
+    IEnumerator ExecuteUnitSkill()
+    {
+        yield return new WaitForSeconds(gameDefinitions.delayToExecuteNextUnitSkill);
+
+        if (unitsToAct.Count <= 0)
+        {
+            ExecutionPhaseEnd();
+            yield break;
+        }
+
+        Unit currentUnitToAct = unitsToAct[0];
+        unitsToAct.Remove(currentUnitToAct);
+
+        currentUnitToAct.unitSkills.ExecuteSkill();
+    }
+
+    void ExecutionPhaseEnd()
+    {
         Debug.Log("EXECUTION PHASE END");
+        InterfaceManager.Instance.PlaySkillNameEndAnim();
         StartCoroutine(EndExecutionPhase(EnemyPhase));
     }
 
@@ -100,6 +132,8 @@ public class BattleManager : MonoBehaviour
 
     void DefineUnitTurnOrder()
     {
+        unitsToAct.Clear();
+
         foreach (Unit unit in heroUnits)
         {
             unitsToAct.Add(unit);
@@ -128,6 +162,7 @@ public class BattleManager : MonoBehaviour
             var spawnedUnit = Instantiate(unit);
             spawnedUnit.InitiateUnit(TileManager.Instance.battleTiles[count, 0]);
             spawnedUnit.transform.SetParent(parentObj.transform);
+            spawnedUnit.unitUI.ToggleUI(false);
 
             heroUnits.Add(spawnedUnit);
 
@@ -142,10 +177,11 @@ public class BattleManager : MonoBehaviour
         foreach (Unit unit in enemyUnitsToSpawn)
         {
             var spawnedUnit = Instantiate(unit);
-            spawnedUnit.InitiateUnit(TileManager.Instance.battleTiles[count, TileManager.Instance.columns-1]);
+            spawnedUnit.InitiateUnit(TileManager.Instance.battleTiles[count, 3]);
             spawnedUnit.transform.SetParent(parentObj.transform);
             spawnedUnit.ChangeSide(FacingSide.FacingLeft);
             spawnedUnit.ChangeType(UnitType.EnemyUnit);
+            spawnedUnit.unitUI.ToggleUI(false);
 
             enemyUnits.Add(spawnedUnit);
 

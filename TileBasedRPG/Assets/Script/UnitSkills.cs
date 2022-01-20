@@ -8,13 +8,24 @@ public class UnitSkills : MonoBehaviour
     public event Action<string, SkillType> SkillChanged;
 
     [Header("Unit Skills")]
-    public SkillBase currentSelectedSkill;
+    public Transform skillObjectsParent;
     public List<SkillBase> skillList;
+    public SkillBase currentSelectedSkill;
 
-    public void SetFirstSkill()
+    public void SkillSetup(Unit unit)
     {
+        for (int i = 0; i < skillObjectsParent.childCount; i++)
+        {
+            skillList.Add(skillObjectsParent.GetChild(i).GetComponent<SkillBase>());
+        }
+
         currentSelectedSkill = skillList[0];
         CallSkillChangeEvent();
+
+        foreach (SkillBase skill in skillList)
+        {
+            skill.unit = unit;
+        }
     }
 
     public void ChangeCurrentSkill(int swapDirection)
@@ -28,6 +39,11 @@ public class UnitSkills : MonoBehaviour
         currentSelectedSkill = skillList[newIndex];
 
         CallSkillChangeEvent();
+    }
+
+    public void ExecuteSkill()
+    {
+        currentSelectedSkill.StartSkill();
     }
 
     void CallSkillChangeEvent()

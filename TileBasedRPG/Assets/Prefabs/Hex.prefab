@@ -132,8 +132,9 @@ MonoBehaviour:
   tileType: 0
   orderInLayer: 0
   highlightFadeDuration: 0.5
-  row: 0
-  column: 0
+  hexPos:
+    row: 0
+    column: 0
   tileDefinitions: {fileID: 11400000, guid: 559a0f00721006e408aee5cdc758e02f, type: 2}
   hexSpriteParent: {fileID: 2011007640528988530}
   unitTransformPosition: {fileID: 210311985961235796}

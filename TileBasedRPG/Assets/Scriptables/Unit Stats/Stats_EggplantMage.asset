@@ -15,7 +15,7 @@ MonoBehaviour:
   unitName: Eggplant Mage
   health: 80
   energy: 200
-  power: 30
+  power: 150
   aid: 10
   technique: 20
   speed: 15

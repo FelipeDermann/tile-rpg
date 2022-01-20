@@ -35,19 +35,35 @@ public class TileManager : MonoBehaviour
         SetupTiles();
     }
 
-    public BattleTile CheckTile(int _row, int _column)
+    public BattleTile GetTileInMatrix(HexPos _hexToCheck)
     {
         BattleTile targetTile = null;
 
-        if (_row > rows-1) _row = 0;
-        if (_row < 0) _row = rows-1;
+        if (_hexToCheck.row > rows - 1 || _hexToCheck.row < 0 ||
+            _hexToCheck.column > columns - 1 || _hexToCheck.column < 0)
+            return null;
 
-        if (_column > columns-1) _column = 0;
-        if (_column < 0) _column = columns-1;
+        targetTile = battleTiles[_hexToCheck.row, _hexToCheck.column];
 
-        targetTile = battleTiles[_row, _column];
+        if (targetTile.tileType == TileType.NullTile)
+            return null;
 
-        if (battleTiles[_row, _column].tileType == TileType.NullTile) 
+        return targetTile;
+    }
+
+    public BattleTile MoveThroughMatrixTiles(HexPos _hexToCheck)
+    {
+        BattleTile targetTile = null;
+
+        if (_hexToCheck.row > rows-1) _hexToCheck.row = 0;
+        if (_hexToCheck.row < 0) _hexToCheck.row = rows-1;
+
+        if (_hexToCheck.column > columns-1) _hexToCheck.column = 0;
+        if (_hexToCheck.column < 0) _hexToCheck.column = columns-1;
+
+        targetTile = battleTiles[_hexToCheck.row, _hexToCheck.column];
+
+        if (battleTiles[_hexToCheck.row, _hexToCheck.column].tileType == TileType.NullTile) 
             targetTile = null;
 
         return targetTile;

@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: GameDefinitions
   m_EditorClassIdentifier: 
   delayToEndExecPhase: 2
+  delayToExecuteNextUnitSkill: 1.5
   endTurnButtonHoldTime: 2
+  arrowMoveDelay: 0

@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Skill_Execute : SkillBase
 {
-    public override void ExecuteSkill()
+    protected override void ExecuteSkill()
     {
-        Debug.Log("Skill Executed: Execute");
+        Debug.Log(unit.unitStats.unitName + " Executed Skill: " + skillStats.skillName);
+        unit.SkillExecutionEndedEvent();
     }
 }

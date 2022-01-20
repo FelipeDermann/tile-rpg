@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ using UnityEngine.InputSystem.Interactions;
 public class ControlsManager : MonoBehaviour
 {
     public static ControlsManager Instance;
+    public static event Action<bool> ShowDetailsButtonPressedState;
 
     [Header("Configurable")]
     public ScriptableGameDefinitions gameDefinitions;
@@ -16,8 +18,7 @@ public class ControlsManager : MonoBehaviour
     public BattleTile selectedTile;
 
     [Header("Player Info")]
-    public int currentRow;
-    public int currentColumn;
+    public HexPos currentArrowPos;
 
     [Header("Visual Aid")]
     public HexHighlight hexHighlight;
@@ -25,8 +26,9 @@ public class ControlsManager : MonoBehaviour
     public Vector3 arrowHexOffset;
 
     [Header("Debug Info")]
-    Vector2 inputDirection;
     bool movingArrow;
+    bool showingDetails = false;
+
 
     PlayerInput input;
     Coroutine endTurnCo;
@@ -80,11 +82,9 @@ public class ControlsManager : MonoBehaviour
             SwapUnitCurrentSkill(ctx.ReadValue<float>());
         };
 
-        //input.Battle.ButtonEast.performed += ctx => EndTurnHold();
-
+        input.Battle.ButtonEast.performed += ctx => ShowDetailsButton();
         input.Battle.Accept.started += ctx => AcceptButtonPressed();
         input.Battle.Cancel.started += ctx => CancelButtonPressed();
-
     }
 
     void CancelButtonPressed()
@@ -98,6 +98,13 @@ public class ControlsManager : MonoBehaviour
         if (unitSelected == null || unitSelected.unitType != UnitType.AllyUnit) return;
 
         unitSelected.unitSkills.ChangeCurrentSkill((int)swapDirection);
+    }
+
+    void ShowDetailsButton()
+    {
+        showingDetails = !showingDetails;
+
+        ShowDetailsButtonPressedState?.Invoke(showingDetails);
     }
 
     void EndTurnHold()
@@ -159,7 +166,8 @@ public class ControlsManager : MonoBehaviour
         input.Battle.Enable();
 
         highlightedTile = TileManager.Instance.battleTiles[1,3];
-        SetArrowPos(1,3);
+        HexPos initialPos = new HexPos(1, 3);
+        SetArrowPos(initialPos);
 
         hexHighlight.ChangeActiveState(true);
     }
@@ -180,15 +188,15 @@ public class ControlsManager : MonoBehaviour
         hexHighlight.ChangeActiveState(false);
     }
 
-    void SetArrowPos(int _row, int _column)
+    void SetArrowPos(HexPos _newPos)
     {
-        currentRow = _row;
-        currentColumn = _column;
+        currentArrowPos.row = _newPos.row;
+        currentArrowPos.column = _newPos.column;
 
-        arrow.transform.position = TileManager.Instance.battleTiles[_row, _column].transform.position 
+        arrow.transform.position = TileManager.Instance.MoveThroughMatrixTiles(_newPos).transform.position 
             + arrowHexOffset;
 
-        hexHighlight.ChangePosition(highlightedTile.transform.position, highlightedTile.orderInLayer);
+        hexHighlight.ChangePosition(highlightedTile.transform.position, highlightedTile.orderInLayer+1);
     }
 
     void MoveArrow(Vector2 inputDirection)
@@ -202,12 +210,15 @@ public class ControlsManager : MonoBehaviour
             direction = Vector2.zero;
 
         //moving vertically changes rows, moving horizontally changes columns!!!
-        Vector2 tileToGo = new Vector2(currentRow - direction.y, currentColumn + direction.x);
-        BattleTile targetTile = TileManager.Instance.CheckTile((int)tileToGo.x, (int)tileToGo.y);
+        HexPos tileToGo = new HexPos(currentArrowPos.row - (int)direction.y, 
+            currentArrowPos.column + (int)direction.x);
+        BattleTile targetTile = TileManager.Instance.MoveThroughMatrixTiles(tileToGo);
         if (targetTile != null)
         {
             HighlightedTile(targetTile);
-            SetArrowPos(targetTile.row, targetTile.column);
+
+            HexPos newPos = new HexPos(targetTile.hexPos.row, targetTile.hexPos.column);
+            SetArrowPos(newPos);
         }
     }
 

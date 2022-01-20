@@ -6,20 +6,81 @@ using TMPro;
 
 public class UnitUI : MonoBehaviour
 {
+    [Header("References")]
     public Canvas canvas;
+    public Bar barParent;
+    public GameObject skillTextParent;
     public TextMeshProUGUI skillText;
-    public Bar bar;
 
-    public Dictionary<SkillType, string> skillTextIcons;
+    private float barPercentage;
+    private Coroutine currentCoroutine = null;
+
+    void OnEnable()
+    {
+        ControlsManager.ShowDetailsButtonPressedState += ToggleUI;
+        BattleManager.TurnOffUnitUI += ToggleUI;
+    }
+
+    void OnDisable()
+    {
+        ControlsManager.ShowDetailsButtonPressedState -= ToggleUI;
+        BattleManager.TurnOffUnitUI -= ToggleUI;
+    }
 
     public void ChangeSortingOrder(int newSortingOrder)
     {
         canvas.sortingOrder = newSortingOrder;
     }
 
-    public void UpdateHealthBar()
+    public void UpdateHealthBar(float currentHealth, float maxHealth, float healthChange)
     {
+        barPercentage = currentHealth / maxHealth;
+        barParent.gameObject.SetActive(true);
 
+        if (currentCoroutine != null) StopCoroutine(currentCoroutine);
+        if (healthChange < 0)  currentCoroutine = StartCoroutine(BarLoss());
+        else currentCoroutine = StartCoroutine(BarGain());
+    }
+
+    IEnumerator BarLoss()
+    {
+        barParent.bar.fillAmount = barPercentage;
+        float t = 0;
+        float a = barParent.barLoss.fillAmount;
+
+        while (barParent.barLoss.fillAmount > barPercentage)
+        {
+            t += Time.deltaTime;
+            barParent.barLoss.fillAmount = Mathf.Lerp(a, barPercentage, t);
+
+            yield return null;
+        }
+        yield return new WaitForSeconds(1);
+        barParent.gameObject.SetActive(false);
+    }
+
+    IEnumerator BarGain()
+    {
+        barParent.barLoss.fillAmount = barPercentage;
+        float t = 0;
+        float a = barParent.bar.fillAmount;
+
+        while (barParent.bar.fillAmount < barPercentage)
+        {
+            t += Time.deltaTime;
+            barParent.bar.fillAmount = Mathf.Lerp(a, barPercentage, t);
+
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(1);
+        barParent.gameObject.SetActive(false);
+    }
+
+    public void ToggleUI(bool newState)
+    {
+        barParent.gameObject.SetActive(newState);
+        skillTextParent.SetActive(newState);
     }
 
     public void UpdateSkillText(string skillName, SkillType skillType)

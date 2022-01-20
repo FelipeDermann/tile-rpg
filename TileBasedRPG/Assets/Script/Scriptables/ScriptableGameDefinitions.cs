@@ -6,6 +6,7 @@ using UnityEngine;
 public class ScriptableGameDefinitions : ScriptableObject
 {
     public float delayToEndExecPhase;
+    public float delayToExecuteNextUnitSkill;
     public float endTurnButtonHoldTime;
     public float arrowMoveDelay;
 }

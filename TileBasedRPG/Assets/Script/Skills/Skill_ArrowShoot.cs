@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class Skill_ArrowShoot : SkillBase
 {
-    public override void ExecuteSkill()
+    protected override void ExecuteSkill()
     {
-        Debug.Log("Skill Executed: Arrow Shoot");
+        Debug.Log(unit.unitStats.unitName + " Executed Skill: " + skillStats.skillName);
+        unit.SkillExecutionEndedEvent();
     }
+
 }

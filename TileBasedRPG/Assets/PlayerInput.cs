@@ -56,7 +56,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""id"": ""c2b9c5e3-d62a-42b8-8192-e4f1000295c3"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Press(behavior=2)""
+                    ""interactions"": """"
                 },
                 {
                     ""name"": ""Swap"",
@@ -85,7 +85,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""path"": ""<Keyboard>/z"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard and Mouse"",
                     ""action"": ""Accept"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -107,7 +107,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""path"": ""<Keyboard>/x"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard and Mouse"",
                     ""action"": ""Cancel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -195,7 +195,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/buttonNorth"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""End Turn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -206,7 +206,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""path"": ""<Keyboard>/c"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard and Mouse"",
                     ""action"": ""End Turn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -217,7 +217,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Button East"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -239,7 +239,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Swap"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -250,7 +250,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Swap"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
