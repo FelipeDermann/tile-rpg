@@ -14,6 +14,12 @@ public class SkillBase : MonoBehaviour
         Debug.Log(unit.unitStats.unitName + " Starting Skill: " + skillStats.skillName);
         InterfaceManager.Instance.PlaySkillNameAnim(skillStats);
 
+        StartCoroutine(PauseUntilExecution());
+    }
+
+    public virtual IEnumerator PauseUntilExecution()
+    {
+        yield return new WaitForSeconds(0.5f);
         ExecuteSkill();
     }
 

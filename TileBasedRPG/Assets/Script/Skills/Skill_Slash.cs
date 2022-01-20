@@ -7,29 +7,24 @@ public class Skill_Slash : SkillBase
 {
     public AnimationEvents skillVFX;
 
-    float damageToDeal;
-    HexPos hexToAffectPos;
-    BattleTile hexToAffect;
-    Unit unitToAffect;
-
     protected override void ExecuteSkill()
     {
-        hexToAffectPos = new HexPos(unit.CurrentTile.hexPos.row,
+        HexPos hexToAffectPos = new HexPos(unit.CurrentTile.hexPos.row,
         unit.CurrentTile.hexPos.column + (1 * unit.GetSideDirection()));
-        hexToAffect = TileManager.Instance.GetTileInMatrix(hexToAffectPos);
-       
-        unitToAffect = null;
-        if (hexToAffect != null) unitToAffect = hexToAffect.UnitStandingOnHex;
+        BattleTile hexToAffect = TileManager.Instance.GetTileInMatrix(hexToAffectPos);
+        
+        if (hexToAffect == null) return;
 
         skillVFX.ApplyEffectEvent += ApplyDamage;
-        skillVFX.PlayAnimation(hexToAffect.transform, unit.CurrentTile.orderInLayer+2);
+        skillVFX.PlayAnimation(hexToAffect, unit);
     }
 
-    private void ApplyDamage()
+    private void ApplyDamage(AnimationEvents vfxUsed, BattleTile _hexToAffect)
     {
-        skillVFX.ApplyEffectEvent -= ApplyDamage;
+        vfxUsed.ApplyEffectEvent -= ApplyDamage;
 
-        damageToDeal = unit.unitStats.power * skillStats.powerScaling;
+        float damageToDeal = unit.unitStats.power * skillStats.powerScaling;
+        Unit unitToAffect = _hexToAffect.UnitStandingOnHex;
         if (unitToAffect != null)
         {
             Debug.Log(unit.unitStats.unitName + " Attacking " + unitToAffect.unitStats.unitName);

@@ -89,7 +89,16 @@ public class ControlsManager : MonoBehaviour
 
     void CancelButtonPressed()
     {
-
+        if (selectedTile == null)
+        {
+            if (highlightedTile.UnitStandingOnHex == null) return;
+            if (highlightedTile.UnitStandingOnHex.unitType != UnitType.AllyUnit) return;
+            highlightedTile.UnitStandingOnHex.ChangeSide();
+        }
+        else
+        {
+            selectedTile = null;
+        }
     }
 
     void SwapUnitCurrentSkill(float swapDirection)

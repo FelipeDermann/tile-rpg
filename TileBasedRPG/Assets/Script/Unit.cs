@@ -76,6 +76,14 @@ public class Unit : MonoBehaviour
             characterSprite.flipX = true;
     }
 
+    public void ChangeSide()
+    {
+        if (facingSide == FacingSide.FacingRight) facingSide = FacingSide.FacingLeft;
+        else facingSide = FacingSide.FacingRight;
+
+        characterSprite.flipX = !characterSprite.flipX;
+    }
+
     public void ChangeType(UnitType _newType)
     {
         unitType = _newType;

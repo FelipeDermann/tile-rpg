@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1771353337378480030, guid: 6b2f1a941f0be954ca5cc45dc7e96626, type: 3}
       propertyPath: fxSpawnOffset.y
-      value: 0.3
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 4161581694724369778, guid: 6b2f1a941f0be954ca5cc45dc7e96626, type: 3}
       propertyPath: m_RootOrder
