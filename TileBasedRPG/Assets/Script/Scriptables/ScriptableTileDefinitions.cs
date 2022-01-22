@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "TileDefinitions", menuName = "ScriptableObjects/TileDefinitions", order = 1)]
 public class ScriptableTileDefinitions : ScriptableObject
 {
-    public Color allyTileColor;
-    public Color enemyTileColor;
-    public Color neutralTileColor;
+    public GameObject allyHexBorder;
+    public GameObject enemyHexBorder;
+    public GameObject neutralHexBorder;
 }

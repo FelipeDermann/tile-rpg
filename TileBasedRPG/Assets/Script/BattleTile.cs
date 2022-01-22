@@ -38,18 +38,18 @@ public class BattleTile : MonoBehaviour
     public HexPos hexPos;
 
     [Header("References")]
-    public ScriptableTileDefinitions tileDefinitions;
-    public Transform hexSpriteParent;
+    public Transform hexCenterSpriteParent;
+    public Transform effectSpritesParent;
     public Transform unitTransformPosition;
 
-    SpriteRenderer hexSprite;
-    public Color originalColor;
+    [Header("Borders")]
+    public Transform borderSpriteParent;
+    public GameObject allyBorder;
+    public GameObject enemyBorder;
+    public GameObject neutralBorder;
+    public GameObject extraBorder;
 
-    void Start()
-    {
-        hexSprite = hexSpriteParent.GetChild(0).GetComponent<SpriteRenderer>();
-        originalColor = hexSprite.color;
-    }
+    SpriteRenderer hexSprite;
 
     public void SetArrayPos(int _row, int _column)
     {
@@ -67,16 +67,21 @@ public class BattleTile : MonoBehaviour
 
     void OnValidate()
     {
+        foreach (Transform obj in borderSpriteParent)
+        {
+            obj.gameObject.SetActive(false);
+        }
+
         switch (tileType)
         {
-            case TileType.AllyTile: 
-                hexSpriteParent.GetChild(0).GetComponent<SpriteRenderer>().color = tileDefinitions.allyTileColor;
+            case TileType.AllyTile:
+                allyBorder.SetActive(true);
                 break;
             case TileType.EnemyTile:
-                hexSpriteParent.GetChild(0).GetComponent<SpriteRenderer>().color = tileDefinitions.enemyTileColor;
+                enemyBorder.SetActive(true);
                 break;
             case TileType.NeutralTile:
-                hexSpriteParent.GetChild(0).GetComponent<SpriteRenderer>().color = tileDefinitions.neutralTileColor;
+                neutralBorder.SetActive(true);
                 break;
             case TileType.NullTile:
                 ChangeHexSprite(false);
@@ -91,17 +96,45 @@ public class BattleTile : MonoBehaviour
     {
         orderInLayer = _layerOrderToSet;
 
-        for (int i = 0; i < hexSpriteParent.childCount; i++)
+        SpriteRenderer[] centerSprites = hexCenterSpriteParent.GetComponentsInChildren<SpriteRenderer>(true);
+        SpriteRenderer[] borderSprites = borderSpriteParent.GetComponentsInChildren<SpriteRenderer>(true);
+        SpriteRenderer[] effectSprites = effectSpritesParent.GetComponentsInChildren<SpriteRenderer>(true);
+
+        foreach (SpriteRenderer sprite in centerSprites)
         {
-            hexSpriteParent.GetChild(i).GetComponent<SpriteRenderer>().sortingOrder = _layerOrderToSet;
+            sprite.sortingOrder = _layerOrderToSet;
+        }
+
+        foreach (SpriteRenderer sprite in borderSprites)
+        {
+            sprite.sortingOrder = _layerOrderToSet+1;
+        }
+
+        foreach (SpriteRenderer sprite in effectSprites)
+        {
+            sprite.sortingOrder = _layerOrderToSet+2;
         }
     }
 
     void ChangeHexSprite(bool isDisplaying)
     {
-        for (int i = 0; i < hexSpriteParent.childCount; i++)
+        SpriteRenderer[] centerSprites = hexCenterSpriteParent.GetComponentsInChildren<SpriteRenderer>(true);
+        SpriteRenderer[] borderSprites = borderSpriteParent.GetComponentsInChildren<SpriteRenderer>(true);
+        SpriteRenderer[] effectSprites = effectSpritesParent.GetComponentsInChildren<SpriteRenderer>(true);
+
+        foreach (SpriteRenderer sprite in centerSprites)
         {
-            hexSpriteParent.GetChild(i).GetComponent<SpriteRenderer>().enabled = isDisplaying;
+            sprite.enabled = isDisplaying;
+        }
+
+        foreach (SpriteRenderer sprite in borderSprites)
+        {
+            sprite.enabled = isDisplaying;
+        }
+
+        foreach (SpriteRenderer sprite in effectSprites)
+        {
+            sprite.enabled = isDisplaying;
         }
 
         AssignLabel(gameObject, !isDisplaying);

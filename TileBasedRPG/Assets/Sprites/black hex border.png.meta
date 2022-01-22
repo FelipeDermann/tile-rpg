@@ -1,13 +1,13 @@
 fileFormatVersion: 2
-guid: 3b3e40fad00a2ff40b6f27dfb14b672d
+guid: 8f6cdf6645052b4419e5f1393996ae1a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4395136831817595176
-    second: hex-Sheet-Sheet-3_0
+      213: 8284659976431404586
+    second: black hex border_0
   - first:
-      213: 1932531252004007772
-    second: hex-Sheet-Sheet-3_1
+      213: -1713304484332827303
+    second: black hex border_1
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -97,7 +97,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: hex-Sheet-Sheet-3_0
+      name: black hex border_0
       rect:
         serializedVersion: 2
         x: 0
@@ -111,14 +111,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8d6c64086565103c0800000000000000
-      internalID: -4395136831817595176
+      spriteID: a260714ca5609f270800000000000000
+      internalID: 8284659976431404586
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: hex-Sheet-Sheet-3_1
+      name: black hex border_1
       rect:
         serializedVersion: 2
         x: 33
@@ -132,8 +132,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c5f2a094feab1da10800000000000000
-      internalID: 1932531252004007772
+      spriteID: 95d024326ae1938e0800000000000000
+      internalID: -1713304484332827303
       vertices: []
       indices: 
       edges: []

@@ -139,15 +139,18 @@ public class ControlsManager : MonoBehaviour
 
     void AcceptButtonPressed()
     {
+        if (highlightedTile.tileType == TileType.EnemyTile) return;
+
         if (selectedTile != null)
         {
-            if (highlightedTile.tileType != TileType.AllyTile) return;
+            if (highlightedTile.UnitStandingOnHex != null)
+                if (highlightedTile.UnitStandingOnHex.unitType != UnitType.AllyUnit) return;
             PlaceUnit();
         }
         else
         {
-            if (highlightedTile.tileType != TileType.AllyTile) return;
             if (highlightedTile.UnitStandingOnHex == null) return;
+            if (highlightedTile.UnitStandingOnHex.unitType != UnitType.AllyUnit) return;
             PickUpUnit();
         }
     }
@@ -205,7 +208,7 @@ public class ControlsManager : MonoBehaviour
         arrow.transform.position = TileManager.Instance.MoveThroughMatrixTiles(_newPos).transform.position 
             + arrowHexOffset;
 
-        hexHighlight.ChangePosition(highlightedTile.transform.position, highlightedTile.orderInLayer+1);
+        hexHighlight.ChangePosition(highlightedTile.transform.position, highlightedTile.orderInLayer+2);
     }
 
     void MoveArrow(Vector2 inputDirection)

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ed8aa8dec89bb04e912a64a593f42d1, type: 3}
   m_Name: TileDefinitions
   m_EditorClassIdentifier: 
-  allyTileColor: {r: 0, g: 0.9217429, b: 1, a: 1}
-  enemyTileColor: {r: 1, g: 0, b: 0, a: 1}
-  neutralTileColor: {r: 1, g: 0.8723384, b: 0, a: 1}
+  allyHexBorder: {fileID: 3221998999192687762, guid: 46a7f8787aaa93641ad937b16fd826c0, type: 3}
+  enemyHexBorder: {fileID: 7667005297837462265, guid: 5b55152f0df53884593e2183b5293f6a, type: 3}
+  neutralHexBorder: {fileID: 3786235764458102290, guid: d4ece8680707106439056b92b411d205, type: 3}

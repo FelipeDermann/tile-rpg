@@ -98,7 +98,7 @@ public class TileManager : MonoBehaviour
             GameObject rowParent = new GameObject("Row " + r);
             rowParent.transform.parent = transform;
 
-            hexSortingOrder = 5 * r;
+            hexSortingOrder = 20 * r;
 
             for (int c = 0; c < columns; c++)
             {

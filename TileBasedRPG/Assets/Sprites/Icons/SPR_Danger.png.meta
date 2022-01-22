@@ -1,13 +1,7 @@
 fileFormatVersion: 2
-guid: e2271794fff734f4fb81e6aa3e9181ef
+guid: e08cddbaefaeee045a9e5feae4a85e36
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: -4395136831817595176
-    second: hex-Sheet-Sheet-3_0
-  - first:
-      213: 1932531252004007772
-    second: hex-Sheet-Sheet-3_1
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -47,7 +41,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -95,49 +89,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: hex-Sheet-Sheet-3_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 33
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8d6c64086565103c0800000000000000
-      internalID: -4395136831817595176
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hex-Sheet-Sheet-3_1
-      rect:
-        serializedVersion: 2
-        x: 33
-        y: 0
-        width: 33
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c5f2a094feab1da10800000000000000
-      internalID: 1932531252004007772
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []

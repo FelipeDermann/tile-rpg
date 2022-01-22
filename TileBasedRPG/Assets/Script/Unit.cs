@@ -60,7 +60,7 @@ public class Unit : MonoBehaviour
         transform.position = _newTile.unitTransformPosition.position;
 
         int newSortingOrder = _newTile.orderInLayer;
-        characterSprite.sortingOrder = newSortingOrder + 2;
+        characterSprite.sortingOrder = newSortingOrder + 3;
         shadowSprite.sortingOrder = characterSprite.sortingOrder - 1;
 
         unitUI.ChangeSortingOrder(characterSprite.sortingOrder + 2);
