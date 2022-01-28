@@ -8,14 +8,15 @@ public class ControlsManager : MonoBehaviour
 {
     public static ControlsManager Instance;
     public static event Action<bool> ShowDetailsButtonPressedState;
+    public static event Action PlayerTurnEnded;
 
     [Header("Configurable")]
     public ScriptableGameDefinitions gameDefinitions;
 
     [Header("Selection Info")]
-    public BattleTile highlightedTile;
-    public BattleTile previousHighlitedTile;
     public BattleTile selectedTile;
+    public BattleTile previousHighlitedTile;
+    public BattleTile storedTile;
 
     [Header("Player Info")]
     public HexPos currentArrowPos;
@@ -28,7 +29,6 @@ public class ControlsManager : MonoBehaviour
     [Header("Debug Info")]
     bool movingArrow;
     bool showingDetails = false;
-
 
     PlayerInput input;
     Coroutine endTurnCo;
@@ -89,21 +89,21 @@ public class ControlsManager : MonoBehaviour
 
     void CancelButtonPressed()
     {
-        if (selectedTile == null)
+        if (storedTile == null)
         {
-            if (highlightedTile.UnitStandingOnHex == null) return;
-            if (highlightedTile.UnitStandingOnHex.unitType != UnitType.AllyUnit) return;
-            highlightedTile.UnitStandingOnHex.ChangeSide();
+            if (selectedTile.UnitStandingOnHex == null) return;
+            if (selectedTile.UnitStandingOnHex.unitType != UnitType.AllyUnit) return;
+            selectedTile.UnitStandingOnHex.ChangeSide();
         }
         else
         {
-            selectedTile = null;
+            storedTile = null;
         }
     }
 
     void SwapUnitCurrentSkill(float swapDirection)
     {
-        Unit unitSelected = highlightedTile.UnitStandingOnHex;
+        Unit unitSelected = selectedTile.UnitStandingOnHex;
         if (unitSelected == null || unitSelected.unitType != UnitType.AllyUnit) return;
 
         unitSelected.unitSkills.ChangeCurrentSkill((int)swapDirection);
@@ -118,13 +118,13 @@ public class ControlsManager : MonoBehaviour
 
     void EndTurnHold()
     {
-        if (selectedTile != null) return;
+        if (storedTile != null) return;
         endTurnCo = StartCoroutine(EndTurnCount());
     }
 
     void EndTurnReleased()
     {
-        if (selectedTile != null) return;
+        if (storedTile != null) return;
         StopCoroutine(endTurnCo);
         Debug.Log("Turn Ending Cancelled!");
     }
@@ -134,40 +134,63 @@ public class ControlsManager : MonoBehaviour
         Debug.Log("Trying to end the turn");
         yield return new WaitForSeconds(gameDefinitions.endTurnButtonHoldTime);
         Debug.Log("Preparation Phase is Over!");
+        PlayerTurnEnded?.Invoke();
         BattleManager.Instance.ChangeBattlePhase(BattlePhase.ExecutionPhase);
     }
 
     void AcceptButtonPressed()
     {
-        if (highlightedTile.tileType == TileType.EnemyTile) return;
+        if (selectedTile.tileType == TileType.EnemyTile) return;
 
-        if (selectedTile != null)
+        if (storedTile != null)
         {
-            if (highlightedTile.UnitStandingOnHex != null)
-                if (highlightedTile.UnitStandingOnHex.unitType != UnitType.AllyUnit) return;
+            if (selectedTile.UnitStandingOnHex != null)
+                if (selectedTile.UnitStandingOnHex.unitType != UnitType.AllyUnit) return;
             PlaceUnit();
         }
         else
         {
-            if (highlightedTile.UnitStandingOnHex == null) return;
-            if (highlightedTile.UnitStandingOnHex.unitType != UnitType.AllyUnit) return;
+            if (selectedTile.UnitStandingOnHex == null) return;
+            if (selectedTile.UnitStandingOnHex.unitType != UnitType.AllyUnit) return;
             PickUpUnit();
         }
     }
 
     void PickUpUnit()
     {
-        selectedTile = highlightedTile;
-        selectedTile.ChangeCurrentUnit(highlightedTile.UnitStandingOnHex);
+        storedTile = selectedTile;
+        storedTile.ChangeCurrentUnit(selectedTile.UnitStandingOnHex);
     }
 
     void PlaceUnit()
     {
-        Unit unitToSwapWith = highlightedTile.UnitStandingOnHex;
-        highlightedTile.ChangeCurrentUnit(selectedTile.UnitStandingOnHex);
+        Unit unitToSwapWith = selectedTile.UnitStandingOnHex;
+        List<Unit> unitsToShowSkillAid = new List<Unit>();
 
-        selectedTile.ChangeCurrentUnit(unitToSwapWith);
-        selectedTile = null;
+        unitsToShowSkillAid.Add(storedTile.UnitStandingOnHex);
+        unitsToShowSkillAid.Add(selectedTile.UnitStandingOnHex);
+
+        selectedTile.ChangeCurrentUnit(storedTile.UnitStandingOnHex);
+
+        storedTile.ChangeCurrentUnit(unitToSwapWith);
+        storedTile = null;
+
+        UpdateSwappedUnitsSkillVisuals(unitsToShowSkillAid);
+    }
+
+    void UpdateSwappedUnitsSkillVisuals(List<Unit> unitList)
+    {
+        foreach (Unit unit in unitList)
+        {
+            if (unit == null) continue;
+            unit.unitSkills.EndCurrentSkillVisuals();
+        }
+
+        foreach (Unit unit in unitList)
+        {
+            if (unit == null) continue;
+            unit.unitSkills.ShowSkillVisuals();
+        }
     }
 
     void StartPlayerControls()
@@ -177,7 +200,7 @@ public class ControlsManager : MonoBehaviour
         arrow.gameObject.SetActive(true);
         input.Battle.Enable();
 
-        highlightedTile = TileManager.Instance.battleTiles[1,3];
+        selectedTile = TileManager.Instance.battleTiles[1,3];
         HexPos initialPos = new HexPos(1, 3);
         SetArrowPos(initialPos);
 
@@ -208,7 +231,7 @@ public class ControlsManager : MonoBehaviour
         arrow.transform.position = TileManager.Instance.MoveThroughMatrixTiles(_newPos).transform.position 
             + arrowHexOffset;
 
-        hexHighlight.ChangePosition(highlightedTile.transform.position, highlightedTile.orderInLayer+2);
+        hexHighlight.ChangePosition(selectedTile.transform.position, selectedTile.orderInLayer+2);
     }
 
     void MoveArrow(Vector2 inputDirection)
@@ -236,9 +259,9 @@ public class ControlsManager : MonoBehaviour
 
     void HighlightedTile(BattleTile targetTile)
     { 
-        previousHighlitedTile = highlightedTile;
+        previousHighlitedTile = selectedTile;
         
-        highlightedTile = targetTile;
+        selectedTile = targetTile;
     }
 
     IEnumerator MoveArrowCoroutine()

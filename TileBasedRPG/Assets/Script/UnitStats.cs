@@ -6,6 +6,7 @@ using UnityEngine;
 public class UnitStats : MonoBehaviour
 {
     public event Action<float, float, float> HealthChanged;
+    public event Action<bool> DamageTaken;
 
     [Header("Main Stats")]
     public string unitName;
@@ -23,6 +24,8 @@ public class UnitStats : MonoBehaviour
     [Header("References")]
     public ScriptableUnitStats stats;
 
+    [SerializeField] TurnPriority turnPriority;
+
     public void InitiateStats()
     {
         unitName = stats.unitName;
@@ -38,12 +41,34 @@ public class UnitStats : MonoBehaviour
         speed = stats.speed;
     }
 
-    public void ChangeHealth(float healthChange)
+    public void ChangeHealth(HealthChange healthChange)
     {
-        currentHealth += healthChange;
+        currentHealth += healthChange.healthValue;
         if (currentHealth > maxHealth) currentHealth = maxHealth;
         if (currentHealth < 0) currentHealth = 0;
 
-        HealthChanged?.Invoke(currentHealth, maxHealth, healthChange);
+        HealthChanged?.Invoke(currentHealth, maxHealth, healthChange.healthValue);
+
+        if (healthChange.healthValue < 0) DamageTaken?.Invoke(healthChange.playCriticalDamageAnimation);
+    }
+
+    public float GetTurnOrderSpeed()
+    {
+        float finalSpeed = speed;
+
+        switch (turnPriority)
+        {
+            case TurnPriority.First: finalSpeed = speed + 9999;
+                break;
+            case TurnPriority.Last: finalSpeed = speed - 9999;
+                break;
+        }
+
+        return finalSpeed;
+    }
+
+    public void ChangeTurnPriority(TurnPriority newTurnPriority)
+    {
+        turnPriority = newTurnPriority;
     }
 }

@@ -14,7 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillStats: {fileID: 11400000, guid: 204ad3aea09147f41ac3a0aafc38e084, type: 2}
   unit: {fileID: 0}
-  skillVFX: {fileID: 136626958213965544}
+  skillVFX:
+  - {fileID: 136626958213965544}
+  animatedHexes: []
+  rowsToAffect: 1
 --- !u!1001 &4397033400608358099
 PrefabInstance:
   m_ObjectHideFlags: 0

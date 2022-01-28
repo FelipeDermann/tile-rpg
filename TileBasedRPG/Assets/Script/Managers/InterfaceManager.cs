@@ -15,6 +15,8 @@ public class InterfaceManager : MonoBehaviour
     Animator anim;
 
     public TextMeshProUGUI skillNameText;
+    public GameObject turnOrderHUD;
+    public Transform turnOrderIconsParent;
 
     private void Awake()
     {
@@ -31,6 +33,25 @@ public class InterfaceManager : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
+    }
+
+    public void ArrangeTurnOrderIcons(List<Unit> unitList)
+    {
+        turnOrderIconsParent.DetachChildren();
+
+        List<Unit> unitListTemp = new List<Unit>();
+        foreach (Unit unit in unitList) unitListTemp.Add(unit);
+        unitListTemp.Reverse();
+
+        foreach (Unit unit in unitListTemp)
+        {
+            unit.turnOrderIcon.transform.parent = turnOrderIconsParent;
+        }
+    }
+
+    public void ToggleTurnOrderHUD(bool active)
+    {
+        turnOrderHUD.SetActive(active);
     }
 
     public void PlayNewBattlePhaseAnim(BattlePhase phase)

@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,14 +17,17 @@ public class Unit : MonoBehaviour
     public BattleTile CurrentTile { get { return currentTile; } }
 
     [Header("Object References")]
+    public GameObject spriteParentObj;
     public SpriteRenderer characterSprite;
     public SpriteRenderer shadowSprite;
+    public TurnOrderIcon turnOrderIcon;
 
     [Header("Script References")]
     public UnitSkills unitSkills;
     public UnitUI unitUI;
     public UnitStats unitStats;
-    
+    public UnitAnimations unitAnims;
+
     [Header("Test")]
     public float healthTest = -20;
 
@@ -34,19 +38,14 @@ public class Unit : MonoBehaviour
 
         unitStats.InitiateStats();
         unitSkills.SkillSetup(this);
-
-        facingSide = FacingSide.FacingRight;
+        turnOrderIcon.ChangeBorderColor(unitType);
     }
 
     void AssignEvents()
     {
         unitSkills.SkillChanged += unitUI.UpdateSkillText;
         unitStats.HealthChanged += unitUI.UpdateHealthBar;
-    }
-
-    public void HealthTest()
-    {
-        unitStats.ChangeHealth(healthTest);
+        unitStats.DamageTaken += unitAnims.DOTTakeDamage;
     }
 
     void AssignFirstTile(BattleTile _tileToSpawnAt)
@@ -82,6 +81,7 @@ public class Unit : MonoBehaviour
         else facingSide = FacingSide.FacingRight;
 
         characterSprite.flipX = !characterSprite.flipX;
+        unitSkills.ShowSkillVisuals();
     }
 
     public void ChangeType(UnitType _newType)

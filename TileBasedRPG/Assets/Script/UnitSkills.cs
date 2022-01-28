@@ -12,6 +12,16 @@ public class UnitSkills : MonoBehaviour
     public List<SkillBase> skillList;
     public SkillBase currentSelectedSkill;
 
+    void Awake()
+    {
+        ControlsManager.PlayerTurnEnded += EndCurrentSkillVisuals;
+    }
+
+    void OnDestroy()
+    {
+        ControlsManager.PlayerTurnEnded -= EndCurrentSkillVisuals;
+    }
+
     public void SkillSetup(Unit unit)
     {
         for (int i = 0; i < skillObjectsParent.childCount; i++)
@@ -20,7 +30,7 @@ public class UnitSkills : MonoBehaviour
         }
 
         currentSelectedSkill = skillList[0];
-        CallSkillChangeEvent();
+        SkillChangedEvent();
 
         foreach (SkillBase skill in skillList)
         {
@@ -36,9 +46,13 @@ public class UnitSkills : MonoBehaviour
         if (newIndex < 0) newIndex = skillList.Count - 1;
         if (newIndex > skillList.Count - 1) newIndex = 0;
 
+        EndCurrentSkillVisuals();
         currentSelectedSkill = skillList[newIndex];
 
-        CallSkillChangeEvent();
+        CurrentSkillPlanningPhaseMethod();
+        BattleManager.Instance.DefineUnitTurnOrder();
+        ShowSkillVisuals();
+        SkillChangedEvent();
     }
 
     public void ExecuteSkill()
@@ -46,8 +60,25 @@ public class UnitSkills : MonoBehaviour
         currentSelectedSkill.StartSkill();
     }
 
-    void CallSkillChangeEvent()
+    void SkillChangedEvent()
     {
         SkillChanged?.Invoke(currentSelectedSkill.skillStats.skillName, currentSelectedSkill.skillStats.skillType);
+    }
+
+    public void ShowSkillVisuals()
+    {
+        if (currentSelectedSkill == null) return;
+        currentSelectedSkill.VisualAidBegin();
+    }
+
+    public void EndCurrentSkillVisuals()
+    {
+        if (currentSelectedSkill == null) return;
+        currentSelectedSkill.VisualAidEnd();
+    }
+
+    public void CurrentSkillPlanningPhaseMethod()
+    {
+        currentSelectedSkill.PlanningPhaseMethod();
     }
 }

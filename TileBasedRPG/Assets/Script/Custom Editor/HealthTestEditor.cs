@@ -13,7 +13,7 @@ public class HealthTestEditor : Editor
         Unit unit = (Unit)target;
         if (GUILayout.Button("Change Health"))
         {
-            unit.HealthTest();
+            //unit.HealthTest();
         }
     }
 }

@@ -19,3 +19,4 @@ MonoBehaviour:
   aid: 5
   technique: 20
   speed: 30
+  turnOrderIcon: {fileID: 7697245377804395405, guid: 71f41ef35f77b6747ba9715af98a5d46, type: 3}

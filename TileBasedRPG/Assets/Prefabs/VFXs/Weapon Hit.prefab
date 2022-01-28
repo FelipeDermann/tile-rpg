@@ -63,5 +63,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Weapon Hit
       objectReference: {fileID: 0}
+    - target: {fileID: 7488445639985712117, guid: 6b2f1a941f0be954ca5cc45dc7e96626, type: 3}
+      propertyPath: m_Color.b
+      value: 0.49426842
+      objectReference: {fileID: 0}
+    - target: {fileID: 7488445639985712117, guid: 6b2f1a941f0be954ca5cc45dc7e96626, type: 3}
+      propertyPath: m_Color.g
+      value: 0.96845895
+      objectReference: {fileID: 0}
+    - target: {fileID: 7488445639985712117, guid: 6b2f1a941f0be954ca5cc45dc7e96626, type: 3}
+      propertyPath: m_Color.r
+      value: 0.9811321
+      objectReference: {fileID: 0}
+    - target: {fileID: 7488445639985712117, guid: 6b2f1a941f0be954ca5cc45dc7e96626, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6b2f1a941f0be954ca5cc45dc7e96626, type: 3}

@@ -6,6 +6,7 @@ using UnityEngine;
 public class AnimationEvents : MonoBehaviour
 {
     public Vector3 fxSpawnOffset;
+    public bool mustMirrorXOffset;
 
     public event Action<AnimationEvents, BattleTile> ApplyEffectEvent;
     Animator anim;
@@ -16,13 +17,29 @@ public class AnimationEvents : MonoBehaviour
     {
         if (anim == null) anim = GetComponent<Animator>();
         if (spr == null) spr = GetComponent<SpriteRenderer>();
+        spr.flipX = _unitUsingSkill.characterSprite.flipX;
 
         targetHex = _targetHex;
-        transform.position = targetHex.transform.position + fxSpawnOffset;
+        TransformEffectObject();
 
         spr.sortingOrder = _unitUsingSkill.characterSprite.sortingOrder +2;
-        spr.flipX = _unitUsingSkill.characterSprite.flipX;
         anim.SetTrigger("Play");
+    }
+
+    void TransformEffectObject()
+    {
+        Vector3 finalOffset = fxSpawnOffset;
+
+        if (mustMirrorXOffset)
+        {
+            int side;
+            if (spr.flipX) side = 1;
+            else side = -1;
+
+            finalOffset.x = finalOffset.x * side;
+        }
+
+        transform.position = targetHex.transform.position + finalOffset;
     }
 
     public void ApplyEffectAnimationEvent()

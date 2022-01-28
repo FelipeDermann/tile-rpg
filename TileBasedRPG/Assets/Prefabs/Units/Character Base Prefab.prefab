@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3088018034307957343}
   - component: {fileID: 62038069130842541}
   - component: {fileID: 5065901602333862495}
+  - component: {fileID: 1356379337539032164}
   m_Layer: 0
   m_Name: Character Base Prefab
   m_TagString: Untagged
@@ -51,11 +52,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitType: 0
   facingSide: 0
+  spriteParentObj: {fileID: 2242205150732717014}
   characterSprite: {fileID: 6915320827042216365}
   shadowSprite: {fileID: 5700343072314899756}
   unitSkills: {fileID: 62038069130842541}
   unitUI: {fileID: 5065901602333862495}
   unitStats: {fileID: 3088018034307957343}
+  unitAnims: {fileID: 1356379337539032164}
   healthTest: 0
 --- !u!114 &3088018034307957343
 MonoBehaviour:
@@ -110,6 +113,18 @@ MonoBehaviour:
   barParent: {fileID: 5554277718877927943}
   skillTextParent: {fileID: 4659423034733300068}
   skillText: {fileID: 2236957107544680563}
+--- !u!114 &1356379337539032164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 124530958298160998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d234b49f1759c142bbc3d5c5a028c28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1592041410814574426
 GameObject:
   m_ObjectHideFlags: 0

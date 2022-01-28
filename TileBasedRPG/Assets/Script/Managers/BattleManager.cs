@@ -19,7 +19,7 @@ public class BattleManager : MonoBehaviour
     public ScriptableGameDefinitions gameDefinitions;
 
     [Header("Units to Spawn")]
-    public List<Unit> allyUnitsToSpawn;
+    public List<Unit> heroUnitsToSpawn;
     public List<Unit> enemyUnitsToSpawn;
 
     [Header("Unit action execution order")]
@@ -65,12 +65,15 @@ public class BattleManager : MonoBehaviour
         battlePhase = phase;
         TurnOffUnitUI?.Invoke(false);
         ControlsManager.Instance.DisablePlayerControls();
+        InterfaceManager.Instance.ToggleTurnOrderHUD(false);
         InterfaceManager.Instance.PlayNewBattlePhaseAnim(battlePhase);
     }
 
     void PreparationPhase()
     {
+        ShowAndSetSkills();
         DefineUnitTurnOrder();
+        InterfaceManager.Instance.ToggleTurnOrderHUD(true);
 
         if (!battleStarted)
         {
@@ -130,7 +133,7 @@ public class BattleManager : MonoBehaviour
         newPhase();
     }
 
-    void DefineUnitTurnOrder()
+    public void DefineUnitTurnOrder()
     {
         unitsToAct.Clear();
 
@@ -144,7 +147,25 @@ public class BattleManager : MonoBehaviour
             unitsToAct.Add(unit);
         }
 
-        unitsToAct.Sort((p1, p2) => p2.unitStats.stats.speed.CompareTo(p1.unitStats.stats.speed));
+        unitsToAct.Sort((p1, p2) => p2.unitStats.GetTurnOrderSpeed().CompareTo(
+            p1.unitStats.GetTurnOrderSpeed()));
+
+        InterfaceManager.Instance.ArrangeTurnOrderIcons(unitsToAct);
+    }
+
+    void ShowAndSetSkills()
+    {
+        foreach (Unit enemy in enemyUnits)
+        {
+            enemy.unitSkills.ShowSkillVisuals();
+            enemy.unitSkills.CurrentSkillPlanningPhaseMethod();
+        }
+
+        foreach (Unit hero in heroUnits)
+        {
+            hero.unitSkills.ShowSkillVisuals();
+            hero.unitSkills.CurrentSkillPlanningPhaseMethod();
+        }
     }
 
     void SpawnUnits()
@@ -157,7 +178,7 @@ public class BattleManager : MonoBehaviour
     {
         int count = 0;
         GameObject parentObj = new GameObject("Player Units");
-        foreach (Unit unit in allyUnitsToSpawn)
+        foreach (Unit unit in heroUnitsToSpawn)
         {
             var spawnedUnit = Instantiate(unit);
             spawnedUnit.InitiateUnit(TileManager.Instance.battleTiles[count, 0]);
@@ -177,10 +198,10 @@ public class BattleManager : MonoBehaviour
         foreach (Unit unit in enemyUnitsToSpawn)
         {
             var spawnedUnit = Instantiate(unit);
-            spawnedUnit.InitiateUnit(TileManager.Instance.battleTiles[count, 3]);
-            spawnedUnit.transform.SetParent(parentObj.transform);
             spawnedUnit.ChangeSide(FacingSide.FacingLeft);
             spawnedUnit.ChangeType(UnitType.EnemyUnit);
+            spawnedUnit.InitiateUnit(TileManager.Instance.battleTiles[count, 3]);
+            spawnedUnit.transform.SetParent(parentObj.transform);
             spawnedUnit.unitUI.ToggleUI(false);
 
             enemyUnits.Add(spawnedUnit);

@@ -43,3 +43,29 @@ public enum SkillType
     Unknown
 }
 
+public enum TurnPriority
+{
+    Normal,
+    First,
+    Last
+}
+
+public struct HealthChange
+{
+    public float healthValue;
+    public bool isBackStab;
+    public bool playCriticalDamageAnimation;
+}
+
+[System.Serializable]
+public struct HexPos
+{
+    public int row, column;
+
+    public HexPos(int _row, int _column)
+    {
+        row = _row;
+        column = _column;
+    }
+}
+

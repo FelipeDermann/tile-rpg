@@ -5,18 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[System.Serializable]
-public struct HexPos
-{
-    public int row, column;
-
-    public HexPos(int _row, int _column)
-    {
-        row = _row;
-        column = _column;
-    }
-}
-
 [SelectionBase]
 public class BattleTile : MonoBehaviour
 {
@@ -50,6 +38,17 @@ public class BattleTile : MonoBehaviour
     public GameObject extraBorder;
 
     SpriteRenderer hexSprite;
+    Animator anim;
+
+    [SerializeField]
+    private bool playingDangerAnim;
+
+    public bool PlayingDangerAnim { get { return playingDangerAnim; } set { playingDangerAnim = value; } }
+
+    private void Awake()
+    {
+        anim = GetComponent<Animator>();
+    }
 
     public void SetArrayPos(int _row, int _column)
     {
@@ -63,6 +62,39 @@ public class BattleTile : MonoBehaviour
         if (_newUnit == null) return;
 
         _newUnit.ChangeCurrentTile(this);
+    }
+
+    public void PlayDangerAnim()
+    {
+        anim.Play("Danger", 0, UpdateManager.Instance.globalHexAnimationTime);
+        playingDangerAnim = true;
+    }
+
+    public void PlayHealAnim()
+    {
+        if (playingDangerAnim) return;
+
+        anim.Play("Heal", 0, UpdateManager.Instance.globalHexAnimationTime);
+    }
+
+    public void PlayBuffAnim()
+    {
+        if (playingDangerAnim) return;
+
+        anim.Play("Buff", 0, UpdateManager.Instance.globalHexAnimationTime);
+    }
+
+    public void PlayDebuffAnim()
+    {
+        if (playingDangerAnim) return;
+
+        anim.Play("Debuff", 0, UpdateManager.Instance.globalHexAnimationTime);
+    }
+
+    public void StopAnimations()
+    {
+        playingDangerAnim = false;
+        anim.Play("Idle");
     }
 
     void OnValidate()

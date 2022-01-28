@@ -16,3 +16,4 @@ MonoBehaviour:
   delayToExecuteNextUnitSkill: 1
   endTurnButtonHoldTime: 1
   arrowMoveDelay: 0
+  backstabDamageMultiplier: 2

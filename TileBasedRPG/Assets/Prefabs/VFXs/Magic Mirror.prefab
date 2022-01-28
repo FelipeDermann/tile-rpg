@@ -7,6 +7,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1771353337378480030, guid: 6b2f1a941f0be954ca5cc45dc7e96626, type: 3}
+      propertyPath: fxSpawnOffset.x
+      value: -0.104
+      objectReference: {fileID: 0}
+    - target: {fileID: 1771353337378480030, guid: 6b2f1a941f0be954ca5cc45dc7e96626, type: 3}
+      propertyPath: fxSpawnOffset.y
+      value: 0.106
+      objectReference: {fileID: 0}
+    - target: {fileID: 1771353337378480030, guid: 6b2f1a941f0be954ca5cc45dc7e96626, type: 3}
+      propertyPath: mustMirrorXOffset
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4161581694724369778, guid: 6b2f1a941f0be954ca5cc45dc7e96626, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -57,7 +69,23 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 055f4ff83b8c82843845337dcf17d8bd, type: 2}
     - target: {fileID: 5106333873614854488, guid: 6b2f1a941f0be954ca5cc45dc7e96626, type: 3}
       propertyPath: m_Name
-      value: Line of Fire 1
+      value: Magic Mirror
+      objectReference: {fileID: 0}
+    - target: {fileID: 7488445639985712117, guid: 6b2f1a941f0be954ca5cc45dc7e96626, type: 3}
+      propertyPath: m_FlipX
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7488445639985712117, guid: 6b2f1a941f0be954ca5cc45dc7e96626, type: 3}
+      propertyPath: m_Size.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7488445639985712117, guid: 6b2f1a941f0be954ca5cc45dc7e96626, type: 3}
+      propertyPath: m_Size.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7488445639985712117, guid: 6b2f1a941f0be954ca5cc45dc7e96626, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6b2f1a941f0be954ca5cc45dc7e96626, type: 3}

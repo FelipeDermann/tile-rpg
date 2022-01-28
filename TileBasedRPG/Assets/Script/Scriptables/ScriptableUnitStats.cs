@@ -5,6 +5,14 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "UnitStats", menuName = "ScriptableObjects/UnitStats", order = 1)]
 public class ScriptableUnitStats : ScriptableObject
 {
+    [Header("Name")]
     public string unitName;
-    public int health, energy, power, aid, technique, speed;
+
+    [Header("Base stats")]
+    public int health;
+    public int energy;
+    public int power;
+    public int aid;
+    public int technique;
+    public int speed;
 }
