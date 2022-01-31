@@ -11,6 +11,8 @@ public class InterfaceManager : MonoBehaviour
     public static event Action BattleStarted;
     public static event Action PreparationPhaseStarted;
     public static event Action ExecutionPhaseStarted;
+    public static event Action BattleVictory;
+    public static event Action BattleDefeat;
 
     Animator anim;
 
@@ -70,6 +72,16 @@ public class InterfaceManager : MonoBehaviour
         anim.SetTrigger("ExecutionPhase");
     }
 
+    public void PlayBattleVictoryAnim()
+    {
+        anim.SetTrigger("Victory");
+    }
+
+    public void PlayBattleDefeatAnim()
+    {
+        anim.SetTrigger("Defeat");
+    }
+
     public void BattleStartedAnimEnd()
     {
         BattleStarted?.Invoke();
@@ -94,5 +106,15 @@ public class InterfaceManager : MonoBehaviour
     public void PlaySkillNameEndAnim()
     {
         anim.SetTrigger("SkillNameEnd");
+    }
+
+    public void BattleVictoryAnimEnd()
+    {
+        BattleVictory?.Invoke();
+    }
+
+    public void BattleDefeatAnimEnd()
+    {
+        BattleDefeat?.Invoke();
     }
 }

@@ -5,11 +5,16 @@ using UnityEngine;
 
 public class UnitAnimations : MonoBehaviour
 {
-    Transform playerSprite;
+    Unit playerUnit;
+
+    Animator anim;
+
+    [SerializeField] SpriteRenderer deathVFXSprite;
 
     void Awake()
     {
-        playerSprite = GetComponent<Unit>().spriteParentObj.transform;
+        playerUnit = GetComponent<Unit>();
+        anim = GetComponent<Animator>();
     }
 
     public void DOTMeleeAttack(Unit unit)
@@ -41,14 +46,27 @@ public class UnitAnimations : MonoBehaviour
     {
         if (!playCriticalHitAnim)
         {
-            playerSprite.transform.DOShakeRotation(0.8f, 40, 10, 90);
-            playerSprite.transform.DOShakeScale(0.8f, 0.4f, 10, 90);
+            playerUnit.spriteParentObj.transform.DOShakeRotation(0.8f, 40, 10, 90);
+            playerUnit.spriteParentObj.transform.DOShakeScale(0.8f, 0.4f, 10, 90);
         }
         else
         {
-            playerSprite.transform.DOShakePosition(0.8f, 0.15f, 10, 100);
-            playerSprite.transform.DOShakeRotation(0.8f, 40, 10, 90);
-            playerSprite.transform.DOShakeScale(0.8f, 0.4f, 10, 100);
+            playerUnit.spriteParentObj.transform.DOShakePosition(0.8f, 0.15f, 10, 100);
+            playerUnit.spriteParentObj.transform.DOShakeRotation(0.8f, 40, 10, 90);
+            playerUnit.spriteParentObj.transform.DOShakeScale(0.8f, 0.4f, 10, 100);
         }
+    }
+
+    public void DeathAnimation()
+    {
+        Debug.Log("YOU ARE DEAD DEAD DEAD!");
+
+        deathVFXSprite.sortingOrder = playerUnit.CurrentTile.orderInLayer+2;
+        anim.SetTrigger("Death");
+    }
+
+    public void DeathAnimationEvent()
+    {
+        gameObject.SetActive(false);
     }
 }

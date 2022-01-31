@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem.Interactions;
+using DG.Tweening;
 
 public class ControlsManager : MonoBehaviour
 {
@@ -15,7 +16,6 @@ public class ControlsManager : MonoBehaviour
 
     [Header("Selection Info")]
     public BattleTile selectedTile;
-    public BattleTile previousHighlitedTile;
     public BattleTile storedTile;
 
     [Header("Player Info")]
@@ -23,8 +23,7 @@ public class ControlsManager : MonoBehaviour
 
     [Header("Visual Aid")]
     public HexHighlight hexHighlight;
-    public GameObject arrow;
-    public Vector3 arrowHexOffset;
+    public SelectionHand arrow;
 
     [Header("Debug Info")]
     bool movingArrow;
@@ -83,12 +82,14 @@ public class ControlsManager : MonoBehaviour
         };
 
         input.Battle.ButtonEast.performed += ctx => ShowDetailsButton();
-        input.Battle.Accept.started += ctx => AcceptButtonPressed();
-        input.Battle.Cancel.started += ctx => CancelButtonPressed();
+        input.Battle.Accept.performed += ctx => AcceptButtonPressed();
+        input.Battle.Cancel.performed += ctx => CancelButtonPressed();
     }
 
     void CancelButtonPressed()
     {
+        Debug.Log("CANCEL BUTTON PRESSED");
+
         if (storedTile == null)
         {
             if (selectedTile.UnitStandingOnHex == null) return;
@@ -97,7 +98,14 @@ public class ControlsManager : MonoBehaviour
         }
         else
         {
+            input.Battle.Disable();
+            SetArrowPos(storedTile.hexPos);
+            arrow.PlaceUnitOnSelectedTile();
+            arrow.UnparentCurrentGrabbedUnit();
+            selectedTile = storedTile;
+
             storedTile = null;
+            input.Battle.Enable();
         }
     }
 
@@ -140,26 +148,75 @@ public class ControlsManager : MonoBehaviour
 
     void AcceptButtonPressed()
     {
+        Debug.Log("ACCEPT BUTTON PRESSED");
+
         if (selectedTile.tileType == TileType.EnemyTile) return;
 
         if (storedTile != null)
         {
             if (selectedTile.UnitStandingOnHex != null)
                 if (selectedTile.UnitStandingOnHex.unitType != UnitType.AllyUnit) return;
-            PlaceUnit();
+            TweenPlaceUnitAnim();
         }
         else
         {
             if (selectedTile.UnitStandingOnHex == null) return;
             if (selectedTile.UnitStandingOnHex.unitType != UnitType.AllyUnit) return;
-            PickUpUnit();
+            TweenPickUpUnitAnim();
         }
+    }
+
+    void TweenPickUpUnitAnim()
+    {
+        input.Battle.Disable();
+
+        arrow.StopAnims();
+        Vector3 initialPos = arrow.transform.position;
+        Vector3 charSpritePos = new Vector3(
+            selectedTile.unitTransformPosition.transform.position.x,
+            initialPos.y,
+            selectedTile.unitTransformPosition.transform.position.z);
+        Vector3 arrowTargetPos = new Vector3(
+            arrow.transform.position.x,
+            selectedTile.unitTransformPosition.transform.position.y,
+            arrow.transform.position.z
+            );
+
+       arrow.transform.DOMove(arrowTargetPos, 0.15f).OnComplete(() =>
+       {
+            arrow.transform.DOMove(initialPos, 0.15f);
+            selectedTile.UnitStandingOnHex.transform.DOMove(charSpritePos, 0.15f).OnComplete(PickUpUnit);
+       });
+    }
+
+    void TweenPlaceUnitAnim()
+    {
+        input.Battle.Disable();
+
+        arrow.UnparentCurrentGrabbedUnit();
+
+        Vector3 initialPos = arrow.transform.position;
+        Vector3 charSpritePos = new Vector3(
+            storedTile.UnitStandingOnHex.transform.position.x,
+            selectedTile.unitTransformPosition.position.y,
+            storedTile.UnitStandingOnHex.transform.position.z);
+        Vector3 arrowTargetPos = new Vector3(
+            arrow.transform.position.x,
+            selectedTile.unitTransformPosition.transform.position.y,
+            arrow.transform.position.z
+            );
+
+        storedTile.UnitStandingOnHex.transform.DOMove(charSpritePos, 0.15f);
+        arrow.transform.DOMove(arrowTargetPos, 0.15f).OnComplete(() =>
+        { arrow.transform.DOMove(initialPos, 0.15f).OnComplete(PlaceUnit); });
     }
 
     void PickUpUnit()
     {
+        arrow.SetAsParentOfUnit(selectedTile.UnitStandingOnHex);
+
         storedTile = selectedTile;
-        storedTile.ChangeCurrentUnit(selectedTile.UnitStandingOnHex);
+        input.Battle.Enable();
     }
 
     void PlaceUnit()
@@ -172,10 +229,34 @@ public class ControlsManager : MonoBehaviour
 
         selectedTile.ChangeCurrentUnit(storedTile.UnitStandingOnHex);
 
-        storedTile.ChangeCurrentUnit(unitToSwapWith);
+        if (unitToSwapWith != null)
+        {
+            TweenSwapUnit(unitToSwapWith, unitsToShowSkillAid);
+            return;
+        }
+
+        PlaceUnitEnd(unitToSwapWith, unitsToShowSkillAid);
+    }
+
+    void TweenSwapUnit(Unit unitToAnimate, List<Unit> unitsToUpdateSkillVisuals)
+    {
+        Debug.Log("SWAP ANIMATION PLAYING");
+        unitToAnimate.ChangeSpriteSortingOrder(9999);
+        unitToAnimate.transform.DOMove(storedTile.unitTransformPosition.position, 0.15f).OnComplete(() => 
+        { PlaceUnitEnd(unitToAnimate, unitsToUpdateSkillVisuals); } );
+    }
+
+    void PlaceUnitEnd(Unit unitToSwap, List<Unit> unitsToUpdateSkillVisuals)
+    {
+        Debug.Log("Units swapped");
+
+        storedTile.ChangeCurrentUnit(unitToSwap);
         storedTile = null;
 
-        UpdateSwappedUnitsSkillVisuals(unitsToShowSkillAid);
+        UpdateSwappedUnitsSkillVisuals(unitsToUpdateSkillVisuals);
+
+        input.Battle.Enable();
+        arrow.PlaySelectingAnim();
     }
 
     void UpdateSwappedUnitsSkillVisuals(List<Unit> unitList)
@@ -228,10 +309,9 @@ public class ControlsManager : MonoBehaviour
         currentArrowPos.row = _newPos.row;
         currentArrowPos.column = _newPos.column;
 
-        arrow.transform.position = TileManager.Instance.MoveThroughMatrixTiles(_newPos).transform.position 
-            + arrowHexOffset;
-
-        hexHighlight.ChangePosition(selectedTile.transform.position, selectedTile.orderInLayer+2);
+        BattleTile newTile = TileManager.Instance.MoveThroughMatrixTiles(_newPos);
+        arrow.ChangePosition(newTile); 
+        hexHighlight.ChangePosition(newTile);
     }
 
     void MoveArrow(Vector2 inputDirection)
@@ -250,18 +330,11 @@ public class ControlsManager : MonoBehaviour
         BattleTile targetTile = TileManager.Instance.MoveThroughMatrixTiles(tileToGo);
         if (targetTile != null)
         {
-            HighlightedTile(targetTile);
+            selectedTile = targetTile;
 
             HexPos newPos = new HexPos(targetTile.hexPos.row, targetTile.hexPos.column);
             SetArrowPos(newPos);
         }
-    }
-
-    void HighlightedTile(BattleTile targetTile)
-    { 
-        previousHighlitedTile = selectedTile;
-        
-        selectedTile = targetTile;
     }
 
     IEnumerator MoveArrowCoroutine()

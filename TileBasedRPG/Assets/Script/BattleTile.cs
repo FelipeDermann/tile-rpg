@@ -66,7 +66,7 @@ public class BattleTile : MonoBehaviour
 
     public void PlayDangerAnim()
     {
-        anim.Play("Danger", 0, UpdateManager.Instance.globalHexAnimationTime);
+        anim.Play("Danger", 0, GlobalHexAnimManager.Instance.globalHex.GetCurrentAnimatorStateInfo(0).normalizedTime);
         playingDangerAnim = true;
     }
 
@@ -74,21 +74,21 @@ public class BattleTile : MonoBehaviour
     {
         if (playingDangerAnim) return;
 
-        anim.Play("Heal", 0, UpdateManager.Instance.globalHexAnimationTime);
+        anim.Play("Heal", 0, GlobalHexAnimManager.Instance.globalHex.GetCurrentAnimatorStateInfo(0).normalizedTime);
     }
 
     public void PlayBuffAnim()
     {
         if (playingDangerAnim) return;
 
-        anim.Play("Buff", 0, UpdateManager.Instance.globalHexAnimationTime);
+        anim.Play("Buff", 0, GlobalHexAnimManager.Instance.globalHex.GetCurrentAnimatorStateInfo(0).normalizedTime);
     }
 
     public void PlayDebuffAnim()
     {
         if (playingDangerAnim) return;
 
-        anim.Play("Debuff", 0, UpdateManager.Instance.globalHexAnimationTime);
+        anim.Play("Debuff", 0, GlobalHexAnimManager.Instance.globalHex.GetCurrentAnimatorStateInfo(0).normalizedTime);
     }
 
     public void StopAnimations()

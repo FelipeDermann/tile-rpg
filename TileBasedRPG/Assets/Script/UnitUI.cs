@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,8 @@ using TMPro;
 
 public class UnitUI : MonoBehaviour
 {
+    public event Action PlayDeathAnim;
+
     [Header("References")]
     public Canvas canvas;
     public Bar barParent;
@@ -14,6 +17,8 @@ public class UnitUI : MonoBehaviour
 
     private float barPercentage;
     private Coroutine currentCoroutine = null;
+
+    bool unitIsDead;
 
     void OnEnable()
     {
@@ -34,6 +39,8 @@ public class UnitUI : MonoBehaviour
 
     public void UpdateHealthBar(float currentHealth, float maxHealth, float healthChange)
     {
+        if (currentHealth <= 0) unitIsDead = true;
+
         barPercentage = currentHealth / maxHealth;
         barParent.gameObject.SetActive(true);
 
@@ -57,6 +64,12 @@ public class UnitUI : MonoBehaviour
         }
         yield return new WaitForSeconds(1);
         barParent.gameObject.SetActive(false);
+
+        if (unitIsDead)
+        {
+            unitIsDead = false;
+            PlayDeathAnim?.Invoke();
+        }
     }
 
     IEnumerator BarGain()

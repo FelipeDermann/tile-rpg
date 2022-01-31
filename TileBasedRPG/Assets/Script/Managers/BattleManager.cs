@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
 {
@@ -30,6 +31,11 @@ public class BattleManager : MonoBehaviour
     [SerializeField]
     private List<Unit> enemyUnits;
 
+    [SerializeField]
+    private List<Unit> deadHeroUnits;
+    [SerializeField]
+    private List<Unit> deadEnemyUnits;
+
     delegate void PhaseToChangeTo();
 
     private void Awake()
@@ -49,6 +55,8 @@ public class BattleManager : MonoBehaviour
         TileManager.TilesSetUpComplete += SpawnUnits;
         InterfaceManager.ExecutionPhaseStarted += ExecutionPhase;
         InterfaceManager.PreparationPhaseStarted += PreparationPhase;
+        InterfaceManager.BattleVictory += RestartScene;
+        InterfaceManager.BattleDefeat += RestartScene;
         Unit.SkillExecutionEnded += AllowNextUnitToAct;
     }
 
@@ -57,6 +65,8 @@ public class BattleManager : MonoBehaviour
         TileManager.TilesSetUpComplete -= SpawnUnits;
         InterfaceManager.ExecutionPhaseStarted -= ExecutionPhase;
         InterfaceManager.PreparationPhaseStarted -= PreparationPhase;
+        InterfaceManager.BattleVictory -= RestartScene;
+        InterfaceManager.BattleDefeat -= RestartScene;
         Unit.SkillExecutionEnded -= AllowNextUnitToAct;
     }
 
@@ -124,7 +134,48 @@ public class BattleManager : MonoBehaviour
     {
         //logic to move enemies around and let them select their moves
         Debug.Log("ENEMY PHASE END");
+
+        CheckGameState();
+    }
+
+    void CheckGameState()
+    {
+        if (heroUnits.Count <= 0)
+        {
+            BattleDefeat();
+            return;
+        }
+
+        if (enemyUnits.Count <= 0)
+        {
+            BattleVictory();
+            return;
+        }
+
         ChangeBattlePhase(BattlePhase.PreparationPhase);
+    }
+
+    void BattleVictory()
+    {
+        InterfaceManager.Instance.PlayBattleVictoryAnim();
+        Debug.Log("YOU WIN!!");
+    }
+
+    void BattleDefeat()
+    {
+        InterfaceManager.Instance.PlayBattleDefeatAnim();
+        Debug.Log("YOU Lose...");
+    }
+
+    void RestartScene()
+    {
+        StartCoroutine(RestartSceneCoroutine());
+    }
+
+    IEnumerator RestartSceneCoroutine()
+    {
+        yield return new WaitForSeconds(3);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     IEnumerator EndExecutionPhase(PhaseToChangeTo newPhase)
@@ -208,5 +259,25 @@ public class BattleManager : MonoBehaviour
 
             count++;
         }
+    }
+
+    public void UnitDeath(Unit unitThatDied)
+    {
+        if (unitsToAct.Contains(unitThatDied))
+            unitsToAct.Remove(unitThatDied);
+
+        if (heroUnits.Contains(unitThatDied))
+        {
+            heroUnits.Remove(unitThatDied);
+            deadHeroUnits.Add(unitThatDied);
+        }
+
+        if (enemyUnits.Contains(unitThatDied))
+        {
+            enemyUnits.Remove(unitThatDied);
+            deadEnemyUnits.Add(unitThatDied);
+        }
+
+        Debug.Log("Battle manager knows that unit is dead: " + unitThatDied.unitStats.unitName);
     }
 }

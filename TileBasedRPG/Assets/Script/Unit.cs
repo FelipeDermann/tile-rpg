@@ -12,6 +12,7 @@ public class Unit : MonoBehaviour
     [Header("Unit Info")]
     public UnitType unitType;
     public FacingSide facingSide;
+    public bool isDead = false;
     private BattleTile currentTile;
 
     public BattleTile CurrentTile { get { return currentTile; } }
@@ -46,6 +47,17 @@ public class Unit : MonoBehaviour
         unitSkills.SkillChanged += unitUI.UpdateSkillText;
         unitStats.HealthChanged += unitUI.UpdateHealthBar;
         unitStats.DamageTaken += unitAnims.DOTTakeDamage;
+        unitStats.UnitDied += UnitDeath;
+        unitUI.PlayDeathAnim += unitAnims.DeathAnimation;
+    }
+
+    void OnDestroy()
+    {
+        unitSkills.SkillChanged -= unitUI.UpdateSkillText;
+        unitStats.HealthChanged -= unitUI.UpdateHealthBar;
+        unitStats.DamageTaken -= unitAnims.DOTTakeDamage;
+        unitStats.UnitDied -= UnitDeath;
+        unitUI.PlayDeathAnim -= unitAnims.DeathAnimation;
     }
 
     void AssignFirstTile(BattleTile _tileToSpawnAt)
@@ -58,7 +70,21 @@ public class Unit : MonoBehaviour
     {
         transform.position = _newTile.unitTransformPosition.position;
 
+        ChangeSpriteSortingOrder(_newTile);
+    }
+
+    public void ChangeSpriteSortingOrder(BattleTile _newTile)
+    {
         int newSortingOrder = _newTile.orderInLayer;
+        characterSprite.sortingOrder = newSortingOrder + 3;
+        shadowSprite.sortingOrder = characterSprite.sortingOrder - 1;
+
+        unitUI.ChangeSortingOrder(characterSprite.sortingOrder + 2);
+    }
+
+    public void ChangeSpriteSortingOrder(int _newSortingOrder)
+    {
+        int newSortingOrder = _newSortingOrder;
         characterSprite.sortingOrder = newSortingOrder + 3;
         shadowSprite.sortingOrder = characterSprite.sortingOrder - 1;
 
@@ -106,5 +132,19 @@ public class Unit : MonoBehaviour
     public void SkillExecutionEndedEvent()
     {
         SkillExecutionEnded?.Invoke();
+    }
+
+    void UnitDeath()
+    {
+        isDead = true;
+
+        currentTile.ChangeCurrentUnit(null);
+            
+        BattleManager.Instance.UnitDeath(this);
+    }
+
+    void RestoreUnitFromDeath()
+    {
+
     }
 }

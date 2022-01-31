@@ -7,6 +7,7 @@ public class UnitStats : MonoBehaviour
 {
     public event Action<float, float, float> HealthChanged;
     public event Action<bool> DamageTaken;
+    public event Action UnitDied;
 
     [Header("Main Stats")]
     public string unitName;
@@ -50,6 +51,7 @@ public class UnitStats : MonoBehaviour
         HealthChanged?.Invoke(currentHealth, maxHealth, healthChange.healthValue);
 
         if (healthChange.healthValue < 0) DamageTaken?.Invoke(healthChange.playCriticalDamageAnimation);
+        if (currentHealth <= 0) UnitDied?.Invoke();
     }
 
     public float GetTurnOrderSpeed()

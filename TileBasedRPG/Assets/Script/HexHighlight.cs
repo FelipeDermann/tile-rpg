@@ -14,13 +14,13 @@ public class HexHighlight : MonoBehaviour
         gameObject.SetActive(newState);
     }
 
-    public void ChangePosition(Vector3 newPos, int newOrderInLayer)
+    public void ChangePosition(BattleTile newTile)
     {
-        transform.position = newPos;
+        transform.position = newTile.transform.position;
 
         for (int i = 0; i < sprites.Length; i++)
         {
-            sprites[i].sortingOrder = newOrderInLayer;
+            sprites[i].sortingOrder = newTile.orderInLayer + 2;
         }
 
         StartHighlightAnimation();
