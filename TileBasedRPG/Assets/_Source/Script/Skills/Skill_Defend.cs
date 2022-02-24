@@ -4,6 +4,27 @@ using UnityEngine;
 
 public class Skill_Defend : SkillBase
 {
+    public float finalBuffValue;
+    public float baseValue;
+    public float scalingValue;
+    
+    public override void SetSkillValues()
+    {
+        baseValue = skillStats.baseValue;
+        scalingValue = skillStats.techScaling * unit.unitStats.technique;
+        finalBuffValue = baseValue + scalingValue;
+    }
+    
+    public override void SetSkillDescription(out string skillDescription)
+    {
+        SetSkillValues();
+        
+        string description = skillStats.skillDescription;
+        description = description.Replace("[FinalBuff]", 
+            "<color=#3685FF>" + finalBuffValue.ToString() + "%" + "</color>");
+        skillDescription = description;
+    }
+    
     protected override void ExecuteSkill()
     {
         List<BattleTile> hexesToAffect = new List<BattleTile>();
@@ -36,21 +57,15 @@ public class Skill_Defend : SkillBase
         vfxUsed.ApplyEffectEvent -= ApplyEffect;
         vfxsToPlay.Remove(vfxUsed);
 
-        float damageToDeal = unit.unitStats.power * skillStats.powerScaling;
+        int buffValue = (int)finalBuffValue;
         Unit unitToAffect = hexToAffect.UnitStandingOnHex;
 
-        HealthChange healthToChange;
-        healthToChange.isBackStab = CheckIfBackStab(unit, unitToAffect);
-        healthToChange.playCriticalDamageAnimation = healthToChange.isBackStab;
+        Buff defenseBuff = new Buff(BuffType.DamageReductionBuff, buffValue, skillStats.skillScriptable.effectDuration);
         
-        damageToDeal = healthToChange.isBackStab ? damageToDeal *
-            BattleManager.Instance.gameDefinitions.backstabDamageMultiplier : damageToDeal;
-        healthToChange.healthValue = -damageToDeal;
-
         if (unitToAffect != null)
         {
             Debug.Log(unit.unitStats.unitName + " Attacking " + unitToAffect.unitStats.unitName);
-            unitToAffect.unitStats.ChangeHealth(healthToChange);
+            unitToAffect.unitStats.ReceiveBuff(defenseBuff);
         }
 
         if (vfxsToPlay.Count <= 0) unit.SkillExecutionEndedEvent();

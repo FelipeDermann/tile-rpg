@@ -6,7 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
 {
-    public static event Action<bool> TurnOffUnitUI;
+    public static event Action<bool> ToggleUnitUI;
+    public static event Action TurnOffManagerUI;
+    public static event Action PlanningPhaseStarted;
+    
     public static BattleManager Instance { get; private set; }
 
     [SerializeField]
@@ -72,7 +75,8 @@ public class BattleManager : MonoBehaviour
     public void ChangeBattlePhase(BattlePhase phase)
     {
         battlePhase = phase;
-        TurnOffUnitUI?.Invoke(false);
+        ToggleUnitUI?.Invoke(false);
+        TurnOffManagerUI?.Invoke();
         ControlsManager.Instance.DisablePlayerControls();
         InterfaceManager.Instance.ToggleTurnOrderHUD(false);
         InterfaceManager.Instance.PlayNewBattlePhaseAnim(battlePhase);
@@ -84,6 +88,13 @@ public class BattleManager : MonoBehaviour
         DefineUnitTurnOrder();
         InterfaceManager.Instance.ToggleTurnOrderHUD(true);
 
+        bool ShowDetails = ControlsManager.Instance.ShowingDetails;
+        ShowAllSkillVisuals(ShowDetails);
+        ToggleUnitUI?.Invoke(ShowDetails);
+        ControlsManager.Instance.ShowSelectedUnitDetails();
+        
+        PlanningPhaseStarted?.Invoke();
+        
         if (!battleStarted)
         {
             battleStarted = true;

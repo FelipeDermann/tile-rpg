@@ -30,12 +30,13 @@ public class UnitSkills : MonoBehaviour
         }
 
         currentSelectedSkill = skillList[0];
-        SkillChangedEvent();
-
+        
         foreach (SkillBase skill in skillList)
         {
-            skill.unit = unit;
+            skill.SkillInitialSetup(unit);
         }
+        
+        SkillChangedEvent();
     }
 
     public void ChangeCurrentSkill(int swapDirection)

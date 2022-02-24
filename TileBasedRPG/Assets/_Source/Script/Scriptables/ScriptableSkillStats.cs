@@ -7,13 +7,15 @@ using UnityEngine.UIElements;
 [CreateAssetMenu(fileName = "SkillStats", menuName = "ScriptableObjects/SkillStats", order = 1)]
 public class ScriptableSkillStats : ScriptableObject
 {
-    [Header("Main Info")]
+    [Header("Info")]
     public string skillName;
     public SkillType skillType;
 
-    [Header("Cost")]
+    [Header("Base Attributes")]
     public float energyCost;
-    public float cooldown;
+    public int cooldown;
+    public int effectDuration;
+    public float baseValue;
 
     [Header("Stat Scalings")]
     public float powerScaling;
@@ -23,9 +25,4 @@ public class ScriptableSkillStats : ScriptableObject
     [Header("Skill Description")] 
     [TextArea(3,20)] public string skillDescription;
     [TextArea(3,20)] public string skillExtraInfo;
-
-    public void Test()
-    {
-        Debug.Log("Scriptables can execute code???");
-    }
 }

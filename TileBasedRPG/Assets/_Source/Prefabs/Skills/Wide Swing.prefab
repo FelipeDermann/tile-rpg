@@ -12,13 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1564ceee267f4f54a8b55754204e58ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillStats: {fileID: 11400000, guid: 7b467b095ec918b469ce39119b2b1f4c, type: 2}
   unit: {fileID: 0}
+  skillStats: {fileID: 0}
   skillVFX:
   - {fileID: 4406110119357809597}
   - {fileID: 5974216089288855148}
   - {fileID: 865749611040313155}
-  vfxsToPlay: []
   rowsToAffect: 3
 --- !u!1001 &1266757944592713606
 PrefabInstance:
@@ -71,6 +70,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5464378231824287015, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
+      propertyPath: skillScriptable
+      value: 
+      objectReference: {fileID: 11400000, guid: 7b467b095ec918b469ce39119b2b1f4c, type: 2}
     - target: {fileID: 6075746571421704317, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
       propertyPath: m_Name
       value: Wide Swing

@@ -16,8 +16,10 @@ MonoBehaviour:
   skillType: 2
   energyCost: 0
   cooldown: 0
+  effectDuration: 0
+  baseValue: 20
   powerScaling: 1
   aidScaling: 0
   techScaling: 0
-  skillDescription: Damages one unit in front of you.
+  skillDescription: Deals [FinalDamage] damage to the unit in front of you.
   skillExtraInfo: 

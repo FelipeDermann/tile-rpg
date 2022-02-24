@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfe7a4d68e134da45865e76da418d253, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillStats: {fileID: 11400000, guid: 2f873a1610971a947b7158264ad1080c, type: 2}
   unit: {fileID: 0}
+  skillStats: {fileID: 0}
   skillVFX:
   - {fileID: 4014807170006467922}
   rowsToAffect: 1
@@ -68,6 +68,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5464378231824287015, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
+      propertyPath: skillScriptable
+      value: 
+      objectReference: {fileID: 11400000, guid: 2f873a1610971a947b7158264ad1080c, type: 2}
     - target: {fileID: 6075746571421704317, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
       propertyPath: m_Name
       value: Defend

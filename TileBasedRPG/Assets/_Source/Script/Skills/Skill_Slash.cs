@@ -5,6 +5,27 @@ using UnityEngine;
 [System.Serializable]
 public class Skill_Slash : SkillBase
 {
+    public float finalDamageValue;
+    public float baseValue;
+    public float scalingValue;
+    
+    public override void SetSkillValues()
+    {
+        baseValue = skillStats.baseValue;
+        scalingValue = skillStats.powerScaling * unit.unitStats.power;
+        finalDamageValue = baseValue + scalingValue;
+    }
+
+    public override void SetSkillDescription(out string skillDescription)
+    {
+        SetSkillValues();
+        
+        string description = skillStats.skillDescription;
+        description = description.Replace("[FinalDamage]", 
+            "<color=#DB2410>" + finalDamageValue.ToString() + "</color>");
+        skillDescription = description;
+    }
+
     protected override void ExecuteSkill()
     {
         List<BattleTile> hexesToAffect = new List<BattleTile>();
@@ -38,16 +59,18 @@ public class Skill_Slash : SkillBase
         vfxUsed.ApplyEffectEvent -= ApplyDamage;
         vfxsToPlay.Remove(vfxUsed);
 
-        float damageToDeal = unit.unitStats.power * skillStats.powerScaling;
+        SetSkillValues();
+
+        float damageToDeal = finalDamageValue;
         Unit unitToAffect = hexToAffect.UnitStandingOnHex;
 
-        HealthChange healthToChange;
-        healthToChange.isBackStab = CheckIfBackStab(unit, unitToAffect);
-        healthToChange.playCriticalDamageAnimation = healthToChange.isBackStab;
+        bool isBackStab = CheckIfBackStab(unit, unitToAffect);
+        bool playCriticalDamageAnimation = isBackStab;
         
-        damageToDeal = healthToChange.isBackStab ? damageToDeal * 
+        damageToDeal = isBackStab ? damageToDeal * 
             BattleManager.Instance.gameDefinitions.backstabDamageMultiplier : damageToDeal;
-        healthToChange.healthValue = -damageToDeal;
+        
+        HealthChange healthToChange = new HealthChange(-damageToDeal, isBackStab, playCriticalDamageAnimation);
 
         if (unitToAffect != null)
         {
@@ -81,7 +104,6 @@ public class Skill_Slash : SkillBase
     public override void PlanningPhaseMethod()
     {
         unit.unitStats.ChangeTurnPriority(TurnPriority.Normal);
-        skillStats.Test();
     }
 
     public override void VisualAidEnd()

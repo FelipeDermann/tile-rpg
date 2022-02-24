@@ -6,11 +6,9 @@ using UnityEngine;
 [System.Serializable]
 public class SkillBase : MonoBehaviour
 {
-    public ScriptableSkillStats skillStats;
-
-    [HideInInspector]
-    public Unit unit;
-
+    [HideInInspector] public Unit unit;
+    [HideInInspector] public SkillStats skillStats;
+    
     [Header("Skill Visual Effects")]
     public List<AnimationEvents> skillVFX;
 
@@ -31,6 +29,25 @@ public class SkillBase : MonoBehaviour
         InterfaceManager.Instance.PlaySkillNameAnim(skillStats);
 
         StartCoroutine(PauseUntilExecution());
+    }
+
+    public virtual void SkillInitialSetup(Unit myUnit)
+    {
+        unit = myUnit;
+        skillStats = GetComponent<SkillStats>();
+        skillStats.InitialSetup();
+        
+        SetSkillValues();
+    }
+
+    public virtual void SetSkillValues()
+    {
+        
+    }
+
+    public virtual void SetSkillDescription(out string skillDescription)
+    {
+        skillDescription = "Base Skill";
     }
 
     public virtual IEnumerator PauseUntilExecution()

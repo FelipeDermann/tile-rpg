@@ -32,6 +32,11 @@ public class ControlsManager : MonoBehaviour
     [Header("Debug Info")]
     bool movingArrow;
     bool showingDetails = false;
+    public bool ShowingDetails
+    {
+        get { return showingDetails; }
+    }
+    
     private ControlType controlType;
 
     InputMap_Main input;
@@ -401,6 +406,12 @@ public class ControlsManager : MonoBehaviour
             HexPos newPos = new HexPos(targetTile.hexPos.row, targetTile.hexPos.column);
             SetArrowPos(newPos);
         }
+    }
+
+    public void ShowSelectedUnitDetails()
+    {
+        if (arrow.CurrentTile.UnitStandingOnHex == null) return;
+        ShowSelectedUnitSkillVisual(arrow.CurrentTile.UnitStandingOnHex, null);
     }
 
     IEnumerator MoveArrowCoroutine()

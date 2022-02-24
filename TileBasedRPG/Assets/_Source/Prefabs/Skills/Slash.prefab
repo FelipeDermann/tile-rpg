@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36d3bd638b3c96645a7a78b7bc5cda58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillStats: {fileID: 11400000, guid: 204ad3aea09147f41ac3a0aafc38e084, type: 2}
   unit: {fileID: 0}
+  skillStats: {fileID: 0}
   skillVFX:
   - {fileID: 136626958213965544}
-  animatedHexes: []
   rowsToAffect: 1
+  finalValue: 0
+  baseValue: 0
+  scalingValue: 0
 --- !u!1001 &4397033400608358099
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -69,6 +71,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5464378231824287015, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
+      propertyPath: skillSlash
+      value: 
+      objectReference: {fileID: 3446252434122215740}
+    - target: {fileID: 5464378231824287015, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
+      propertyPath: skillScriptable
+      value: 
+      objectReference: {fileID: 11400000, guid: 204ad3aea09147f41ac3a0aafc38e084, type: 2}
     - target: {fileID: 6075746571421704317, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
       propertyPath: m_Name
       value: Slash

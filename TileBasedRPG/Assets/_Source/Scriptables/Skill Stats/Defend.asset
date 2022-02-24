@@ -16,8 +16,11 @@ MonoBehaviour:
   skillType: 3
   energyCost: 10
   cooldown: 0
+  effectDuration: 0
+  baseValue: 20
   powerScaling: 0
   aidScaling: 0
   techScaling: 1
-  skillDescription: Reduces damage received for the turn used. Always acts first.
+  skillDescription: Reduces [FinalBuff] damage received for the turn used. Always
+    acts first.
   skillExtraInfo: 

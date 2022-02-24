@@ -23,13 +23,13 @@ public class UnitUI : MonoBehaviour
     void OnEnable()
     {
         ControlsManager.ShowDetailsButtonPressedState += ToggleUI;
-        BattleManager.TurnOffUnitUI += ToggleUI;
+        BattleManager.ToggleUnitUI += ToggleUI;
     }
 
     void OnDisable()
     {
         ControlsManager.ShowDetailsButtonPressedState -= ToggleUI;
-        BattleManager.TurnOffUnitUI -= ToggleUI;
+        BattleManager.ToggleUnitUI -= ToggleUI;
     }
 
     public void ChangeSortingOrder(int newSortingOrder)

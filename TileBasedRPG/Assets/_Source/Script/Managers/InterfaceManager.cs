@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.PlayerLoop;
+using UnityEngine.Pool;
 
 public class InterfaceManager : MonoBehaviour
 {
@@ -28,9 +30,12 @@ public class InterfaceManager : MonoBehaviour
     public GameObject helpTextParent;
     public GameObject helpTextGamepad;
     public GameObject helpTextKeyboard;
-
-    private Coroutine endTurnCoroutine;
+    public Transform damageTextParent;
+    public DamageText damageTextPrefab;
     
+    private Coroutine endTurnCoroutine;
+    private ObjectPool<DamageText> pool;
+
     private void Awake()
     {
         if (Instance == null)
@@ -42,14 +47,43 @@ public class InterfaceManager : MonoBehaviour
             Destroy(gameObject);
         }
 
+        pool = new ObjectPool<DamageText>(() =>
+        {
+            var text = Instantiate(damageTextPrefab);
+            text.gameObject.SetActive(false);
+            text.transform.parent = damageTextParent;
+            return text;
+        }, text =>
+        {
+            if (text == null  || text.gameObject == null) 
+                Debug.Log("Text is NULL");
+            text.gameObject.SetActive(true);
+        }, text => {
+            text.gameObject.SetActive(false);
+        }, text => {
+            
+        }, false, 20,20);
+        var elements = new DamageText[20];
+        for (int i = 0; i < 20; i++)
+        {
+            elements[i] = pool.Get();
+        }
+        for (int i = 0; i < 20; i++)
+        {
+            pool.Release(elements[i]);
+        }
+
         ControlsManager.EndTurnButtonPressed += EndTurnObj;
         ControlsManager.ControlTypeChanged += ChangeHelpTextType;
+        BattleManager.TurnOffManagerUI += HideSkillDescriptionPanel;
+        UnitStats.ShowDamageText += SpawnDamageText;
     }
 
     private void OnDestroy()
     {
         ControlsManager.EndTurnButtonPressed -= EndTurnObj;
         ControlsManager.ControlTypeChanged -= ChangeHelpTextType;
+        BattleManager.TurnOffManagerUI -= HideSkillDescriptionPanel;
     }
 
     void Start()
@@ -60,7 +94,6 @@ public class InterfaceManager : MonoBehaviour
     public void ArrangeTurnOrderIcons(List<Unit> unitList)
     {
         turnOrderIconsParent.DetachChildren();
-
         List<Unit> unitListTemp = new List<Unit>();
         foreach (Unit unit in unitList) unitListTemp.Add(unit);
         unitListTemp.Reverse();
@@ -71,9 +104,17 @@ public class InterfaceManager : MonoBehaviour
         }
     }
 
-    void ToggleHelpText()
+    void SpawnDamageText(float value, Unit unit)
     {
-        
+        Debug.Log(pool.CountInactive);
+        var text = pool.Get();
+        text.Init(KillDamageText);
+        text.ShowDamageText(value, unit);
+    }
+
+    void KillDamageText(DamageText damageText)
+    {
+        pool.Release(damageText);
     }
 
     void ChangeHelpTextType(ControlType newControlType)
@@ -94,10 +135,11 @@ public class InterfaceManager : MonoBehaviour
 
     public void ShowSkillDescriptionPanel(Unit unitToGetSkillInfo)
     {
-        ScriptableSkillStats skillStats = unitToGetSkillInfo.unitSkills.currentSelectedSkill.skillStats;
+        SkillStats skillStats = unitToGetSkillInfo.unitSkills.currentSelectedSkill.skillStats;
         string skillNameText = "<sprite name=" + skillStats.skillType.ToString() + ">" + " " + skillStats.skillName;
+        string extraDescription = skillStats.SetSkillExtraInfo();
         
-        skillDescPanel.SetPanelText(skillNameText, skillStats.skillDescription, skillStats.skillExtraInfo);
+        skillDescPanel.SetPanelText(skillNameText, extraDescription);
         skillDescPanel.TogglePanelVisibility(true);
     }
 
@@ -147,7 +189,7 @@ public class InterfaceManager : MonoBehaviour
         ExecutionPhaseStarted?.Invoke();
     }
 
-    public void PlaySkillNameAnim(ScriptableSkillStats skillStats)
+    public void PlaySkillNameAnim(SkillStats skillStats)
     {
         skillNameText.text = "<sprite name=" + skillStats.skillType.ToString() + ">" + " " + skillStats.skillName;
         anim.SetTrigger("SkillNameStart");

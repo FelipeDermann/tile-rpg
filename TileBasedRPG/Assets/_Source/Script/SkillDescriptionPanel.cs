@@ -17,10 +17,10 @@ public class SkillDescriptionPanel : MonoBehaviour
         panelObj.SetActive(showPanel);
     }
 
-    public void SetPanelText(string skillName, string skillDescription, string skillExtraInfo)
+    public void SetPanelText(string skillName, string skillDescription)
     {
         skillNameText.text = skillName;
         skillDescriptionText.text = skillDescription;
-        skillExtraInfoText.text = skillExtraInfo;
+        //skillExtraInfoText.text = skillExtraInfo;
     }
 }

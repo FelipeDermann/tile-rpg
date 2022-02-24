@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: First Aid
   skillType: 1
-  energyCost: 40
+  energyCost: 30
   cooldown: 0
+  effectDuration: 0
+  baseValue: 20
   powerScaling: 0
   aidScaling: 2
   techScaling: 0
-  skillDescription: Heals the unit in front of you.
+  skillDescription: Heals the unit in front of you for [FinalHeal].
   skillExtraInfo: 

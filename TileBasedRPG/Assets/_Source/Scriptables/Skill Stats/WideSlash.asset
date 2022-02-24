@@ -16,8 +16,11 @@ MonoBehaviour:
   skillType: 2
   energyCost: 20
   cooldown: 0
+  effectDuration: 0
+  baseValue: 20
   powerScaling: 1.2
   aidScaling: 0
   techScaling: 0
-  skillDescription: Damages three units in a vertical line in front of you.
+  skillDescription: Deals [FinalDamage] to the three units in a vertical line in
+    front of you.
   skillExtraInfo: 

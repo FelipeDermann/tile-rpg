@@ -14,10 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: Life Drain
   skillType: 2
-  energyCost: 40
+  energyCost: 20
   cooldown: 0
-  powerScaling: 1.5
+  effectDuration: 0
+  baseValue: 20
+  powerScaling: 1
   aidScaling: 1
   techScaling: 0
-  skillDescription: Damages an enemy and heal for part of the damage done.
+  skillDescription: Damages an enemy for [FinalDamage] and heals for [FinalHeal]
+    of the damage done.
   skillExtraInfo: 
