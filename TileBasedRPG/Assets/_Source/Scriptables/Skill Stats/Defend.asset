@@ -21,6 +21,6 @@ MonoBehaviour:
   powerScaling: 0
   aidScaling: 0
   techScaling: 1
-  skillDescription: Reduces [FinalBuff] damage received for the turn used. Always
+  skillDescription: Reduces [FinalBuff] of the damage received this turn. Always
     acts first.
   skillExtraInfo: 

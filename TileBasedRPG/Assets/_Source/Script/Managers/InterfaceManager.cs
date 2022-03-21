@@ -10,7 +10,6 @@ using UnityEngine.Pool;
 public class InterfaceManager : MonoBehaviour
 {
     public static InterfaceManager Instance;
-
     public static event Action BattleStarted;
     public static event Action PlayerTurnEnded;
     public static event Action PreparationPhaseStarted;
@@ -47,11 +46,28 @@ public class InterfaceManager : MonoBehaviour
             Destroy(gameObject);
         }
 
+        SetPool();
+
+        ControlsManager.EndTurnButtonPressed += EndTurnObj;
+        ControlsManager.ControlTypeChanged += ChangeHelpTextType;
+        BattleManager.TurnOffManagerUI += HideSkillDescriptionPanel;
+        UnitStats.ShowDamageText += SpawnDamageText;
+    }
+
+    private void OnDestroy()
+    {
+        ControlsManager.EndTurnButtonPressed -= EndTurnObj;
+        ControlsManager.ControlTypeChanged -= ChangeHelpTextType;
+        BattleManager.TurnOffManagerUI -= HideSkillDescriptionPanel;
+        UnitStats.ShowDamageText -= SpawnDamageText;
+    }
+
+    void SetPool()
+    {
         pool = new ObjectPool<DamageText>(() =>
         {
-            var text = Instantiate(damageTextPrefab);
+            var text = Instantiate(damageTextPrefab, damageTextParent, true);
             text.gameObject.SetActive(false);
-            text.transform.parent = damageTextParent;
             return text;
         }, text =>
         {
@@ -72,18 +88,6 @@ public class InterfaceManager : MonoBehaviour
         {
             pool.Release(elements[i]);
         }
-
-        ControlsManager.EndTurnButtonPressed += EndTurnObj;
-        ControlsManager.ControlTypeChanged += ChangeHelpTextType;
-        BattleManager.TurnOffManagerUI += HideSkillDescriptionPanel;
-        UnitStats.ShowDamageText += SpawnDamageText;
-    }
-
-    private void OnDestroy()
-    {
-        ControlsManager.EndTurnButtonPressed -= EndTurnObj;
-        ControlsManager.ControlTypeChanged -= ChangeHelpTextType;
-        BattleManager.TurnOffManagerUI -= HideSkillDescriptionPanel;
     }
 
     void Start()
@@ -103,13 +107,12 @@ public class InterfaceManager : MonoBehaviour
             unit.turnOrderIcon.transform.SetParent(turnOrderIconsParent);
         }
     }
-
-    void SpawnDamageText(float value, Unit unit)
+    
+    void SpawnDamageText(float value, Unit targetUnit)
     {
-        Debug.Log(pool.CountInactive);
         var text = pool.Get();
         text.Init(KillDamageText);
-        text.ShowDamageText(value, unit);
+        text.ShowDamageText(value, targetUnit);
     }
 
     void KillDamageText(DamageText damageText)

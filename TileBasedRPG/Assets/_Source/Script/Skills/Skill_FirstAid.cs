@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Skill_FirstAid : SkillBase
 {  
-    public float finalHealValue;
-    public float baseValue;
-    public float scalingValue;
+    [HideInInspector] public float finalHealValue;
+    [HideInInspector] public float baseValue;
+    [HideInInspector] public float scalingValue;
     
     public override void SetSkillValues()
     {
@@ -21,16 +21,16 @@ public class Skill_FirstAid : SkillBase
         
         string description = skillStats.skillDescription;
         description = description.Replace("[FinalHeal]", 
-            "<color=#DB2410>" + finalHealValue.ToString() + "</color>");
+            "<color=#00FB2C>" + finalHealValue.ToString() + "</color>");
         skillDescription = description;
     }
 
-    protected override void ExecuteSkill()
+    protected override void SetSkillTarget()
     {
         List<BattleTile> hexesToAffect = new List<BattleTile>();
-        vfxsToPlay = new List<AnimationEvents>();
+        vfxsToPlay = new List<BaseVFXEvents>();
 
-        for (int i = 0; i < rowsToAffect; i++)
+        for (int i = 0; i < 1; i++)
         {
             HexPos hexToAffectPos = new HexPos(unit.CurrentTile.hexPos.row,
             unit.CurrentTile.hexPos.column + (1 * unit.GetSideDirection()));
@@ -42,7 +42,11 @@ public class Skill_FirstAid : SkillBase
             vfxsToPlay.Add(skillVFX[i]);
         }
 
-        if (hexesToAffect.Count <= 0) unit.SkillExecutionEndedEvent();
+        if (hexesToAffect.Count <= 0)
+        {
+            Debug.Log("No hexes on target. Ending skill...");
+            unit.SkillExecutionEndedEvent();
+        }
 
         for (int u = 0; u < hexesToAffect.Count; u++)
         {
@@ -50,10 +54,10 @@ public class Skill_FirstAid : SkillBase
             vfxsToPlay[u].PlayAnimation(hexesToAffect[u], unit);
         }
 
-        unit.unitAnims.DOTMeleeAttack(unit);
+        unit.unitAnims.DOTSpellCast(unit);
     }
 
-    private void ApplyDamage(AnimationEvents vfxUsed, BattleTile hexToAffect)
+    private void ApplyDamage(BaseVFXEvents vfxUsed, BattleTile hexToAffect)
     {
         vfxUsed.ApplyEffectEvent -= ApplyDamage;
         vfxsToPlay.Remove(vfxUsed);
@@ -70,7 +74,7 @@ public class Skill_FirstAid : SkillBase
 
         if (unitToAffect != null)
         {
-            Debug.Log(unit.unitStats.unitName + " Attacking " + unitToAffect.unitStats.unitName);
+            Debug.Log(unit.unitStats.unitName + " Healing " + unitToAffect.unitStats.unitName);
             unitToAffect.unitStats.ChangeHealth(healthToChange);
         }
 
@@ -94,7 +98,7 @@ public class Skill_FirstAid : SkillBase
         animatedHexes.Add(hexToAffect);
 
         foreach (BattleTile hex in animatedHexes)
-            hex.PlayDangerAnim();
+            hex.PlayHealAnim();
     }
 
     public override void PlanningPhaseMethod()

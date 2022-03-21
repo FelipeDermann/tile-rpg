@@ -1,0 +1,165 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &496031551306696443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6205693583646750399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a43b0e723f1c80e419752e19c2420b9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unit: {fileID: 0}
+  skillStats: {fileID: 0}
+  skillVFX:
+  - {fileID: 8477317084350478096}
+  finalDamageValue: 0
+  baseValue: 0
+  scalingValue: 0
+--- !u!1001 &166191455282140866
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3642595405284468510, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3642595405284468510, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3642595405284468510, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3642595405284468510, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3642595405284468510, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3642595405284468510, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3642595405284468510, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3642595405284468510, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3642595405284468510, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3642595405284468510, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3642595405284468510, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464378231824287015, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
+      propertyPath: skillScriptable
+      value: 
+      objectReference: {fileID: 11400000, guid: 4de779cfb33ece74bb08ebaa3f6cdb46, type: 2}
+    - target: {fileID: 6075746571421704317, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
+      propertyPath: m_Name
+      value: Arrow Shot
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
+--- !u!1 &6205693583646750399 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6075746571421704317, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
+  m_PrefabInstance: {fileID: 166191455282140866}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3513783007448101340 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3642595405284468510, guid: 48edcca77add56a4dbb6a059b0dd8133, type: 3}
+  m_PrefabInstance: {fileID: 166191455282140866}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &4549647662147700761
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 3513783007448101340}
+    m_Modifications:
+    - target: {fileID: 307465741429669605, guid: cfe74fe30c73bb44dae0450fd3dd461e, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 307465741429669605, guid: cfe74fe30c73bb44dae0450fd3dd461e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 307465741429669605, guid: cfe74fe30c73bb44dae0450fd3dd461e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 307465741429669605, guid: cfe74fe30c73bb44dae0450fd3dd461e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 307465741429669605, guid: cfe74fe30c73bb44dae0450fd3dd461e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 307465741429669605, guid: cfe74fe30c73bb44dae0450fd3dd461e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 307465741429669605, guid: cfe74fe30c73bb44dae0450fd3dd461e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 307465741429669605, guid: cfe74fe30c73bb44dae0450fd3dd461e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 307465741429669605, guid: cfe74fe30c73bb44dae0450fd3dd461e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 307465741429669605, guid: cfe74fe30c73bb44dae0450fd3dd461e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 307465741429669605, guid: cfe74fe30c73bb44dae0450fd3dd461e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6514724406055393378, guid: cfe74fe30c73bb44dae0450fd3dd461e, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8888391991303310031, guid: cfe74fe30c73bb44dae0450fd3dd461e, type: 3}
+      propertyPath: m_Name
+      value: Arrow Shot VFX
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 208510258461435984, guid: cfe74fe30c73bb44dae0450fd3dd461e, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: cfe74fe30c73bb44dae0450fd3dd461e, type: 3}
+--- !u!114 &8477317084350478096 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5370228682223746825, guid: cfe74fe30c73bb44dae0450fd3dd461e, type: 3}
+  m_PrefabInstance: {fileID: 4549647662147700761}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a12030f2429498f49b42c0d84c9de163, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -20,7 +20,8 @@ public class DamageText : MonoBehaviour
     public void ShowDamageText(float value, Unit targetUnit)
     {
         string valueInString = value.ToString();
-        string textToShow = value >= 0 ? "+" + valueInString : valueInString;
+        string textToShow = value >= 0 ? "<color=green>" + "+" + valueInString + "</color>" : 
+            "<color=#FF2D00>" + valueInString + "</color>";
 
         transform.position = targetUnit.transform.position;
         SetDamageText(textToShow);   

@@ -26,12 +26,12 @@ public class Skill_Slash : SkillBase
         skillDescription = description;
     }
 
-    protected override void ExecuteSkill()
+    protected override void SetSkillTarget()
     {
         List<BattleTile> hexesToAffect = new List<BattleTile>();
-        vfxsToPlay = new List<AnimationEvents>();
+        vfxsToPlay = new List<BaseVFXEvents>();
 
-        for (int i = 0; i < rowsToAffect; i++)
+        for (int i = 0; i < 1; i++)
         {
             HexPos hexToAffectPos = new HexPos(unit.CurrentTile.hexPos.row,
             unit.CurrentTile.hexPos.column + (1 * unit.GetSideDirection()));
@@ -54,7 +54,7 @@ public class Skill_Slash : SkillBase
         unit.unitAnims.DOTMeleeAttack(unit);
     }
 
-    private void ApplyDamage(AnimationEvents vfxUsed, BattleTile hexToAffect)
+    private void ApplyDamage(BaseVFXEvents vfxUsed, BattleTile hexToAffect)
     {
         vfxUsed.ApplyEffectEvent -= ApplyDamage;
         vfxsToPlay.Remove(vfxUsed);

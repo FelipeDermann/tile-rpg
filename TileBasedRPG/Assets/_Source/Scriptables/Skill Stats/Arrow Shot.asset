@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bb16bcbf57dff054bbe5578cef0c3495, type: 3}
-  m_Name: FirstAid
+  m_Name: Arrow Shot
   m_EditorClassIdentifier: 
-  skillName: First Aid
-  skillType: 1
-  energyCost: 30
+  skillName: Arrow Shot
+  skillType: 2
+  energyCost: 0
   cooldown: 0
   effectDuration: 0
   baseValue: 20
-  powerScaling: 0
-  aidScaling: 2
+  powerScaling: 1
+  aidScaling: 0
   techScaling: 0
-  skillDescription: Heals the unit in front of you for [FinalHeal] health.
-  skillExtraInfo: 
+  skillDescription: Fires an arrow at the first enemy in front of this unit for [FinalDamage]
+    damage.

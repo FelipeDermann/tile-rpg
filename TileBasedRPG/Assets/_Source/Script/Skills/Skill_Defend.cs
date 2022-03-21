@@ -25,12 +25,12 @@ public class Skill_Defend : SkillBase
         skillDescription = description;
     }
     
-    protected override void ExecuteSkill()
+    protected override void SetSkillTarget()
     {
         List<BattleTile> hexesToAffect = new List<BattleTile>();
-        vfxsToPlay = new List<AnimationEvents>();
+        vfxsToPlay = new List<BaseVFXEvents>();
 
-        for (int i = 0; i < rowsToAffect; i++)
+        for (int i = 0; i < 1; i++)
         {
             HexPos hexToAffectPos = new HexPos(unit.CurrentTile.hexPos.row, unit.CurrentTile.hexPos.column);
 
@@ -52,7 +52,7 @@ public class Skill_Defend : SkillBase
         unit.unitAnims.DOTSpellCast(unit);
     }
 
-    private void ApplyEffect(AnimationEvents vfxUsed, BattleTile hexToAffect)
+    private void ApplyEffect(BaseVFXEvents vfxUsed, BattleTile hexToAffect)
     {
         vfxUsed.ApplyEffectEvent -= ApplyEffect;
         vfxsToPlay.Remove(vfxUsed);
@@ -82,7 +82,7 @@ public class Skill_Defend : SkillBase
 
         int a = -1;
 
-        for (int i = 0; i < rowsToAffect; i++)
+        for (int i = 0; i < 1; i++)
         {
             HexPos hexToAffectPos = new HexPos(unit.CurrentTile.hexPos.row, unit.CurrentTile.hexPos.column);
             a++;

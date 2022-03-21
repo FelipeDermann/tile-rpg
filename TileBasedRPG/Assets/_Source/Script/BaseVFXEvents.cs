@@ -3,17 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimationEvents : MonoBehaviour
+public class BaseVFXEvents : MonoBehaviour
 {
     public Vector3 fxSpawnOffset;
     public bool mustMirrorXOffset;
 
-    public event Action<AnimationEvents, BattleTile> ApplyEffectEvent;
+    public event Action<BaseVFXEvents, BattleTile> ApplyEffectEvent;
     Animator anim;
     SpriteRenderer spr;
-    BattleTile targetHex;
+    public BattleTile targetHex;
 
-    public void PlayAnimation(BattleTile _targetHex, Unit _unitUsingSkill)
+    public virtual void PlayAnimation(BattleTile _targetHex, Unit _unitUsingSkill)
     {
         if (anim == null) anim = GetComponent<Animator>();
         if (spr == null) spr = GetComponent<SpriteRenderer>();

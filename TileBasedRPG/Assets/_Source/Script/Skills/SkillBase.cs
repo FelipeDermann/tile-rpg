@@ -10,12 +10,9 @@ public class SkillBase : MonoBehaviour
     [HideInInspector] public SkillStats skillStats;
     
     [Header("Skill Visual Effects")]
-    public List<AnimationEvents> skillVFX;
+    public List<BaseVFXEvents> skillVFX;
 
-    [SerializeField]
-    protected int rowsToAffect;
-
-    protected List<AnimationEvents> vfxsToPlay;
+    protected List<BaseVFXEvents> vfxsToPlay;
     protected List<BattleTile> animatedHexes;
 
     void Awake()
@@ -53,10 +50,10 @@ public class SkillBase : MonoBehaviour
     public virtual IEnumerator PauseUntilExecution()
     {
         yield return new WaitForSeconds(0.5f);
-        ExecuteSkill();
+        SetSkillTarget();
     }
 
-    protected virtual void ExecuteSkill()
+    protected virtual void SetSkillTarget()
     {
         Debug.Log(unit.unitStats.unitName + " Executed Skill: " + skillStats.skillName);
         unit.SkillExecutionEndedEvent();

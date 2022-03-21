@@ -24,5 +24,4 @@ public class ScriptableSkillStats : ScriptableObject
 
     [Header("Skill Description")] 
     [TextArea(3,20)] public string skillDescription;
-    [TextArea(3,20)] public string skillExtraInfo;
 }

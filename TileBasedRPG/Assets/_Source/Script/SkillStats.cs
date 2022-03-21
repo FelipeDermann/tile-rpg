@@ -8,22 +8,22 @@ public class SkillStats : MonoBehaviour
     private SkillBase skill;
     
     [Header("Info")]
-    public string skillName;
-    public SkillType skillType;
+    [HideInInspector] public string skillName;
+    [HideInInspector] public SkillType skillType;
 
     [Header("Base Attributes")]
-    public float energyCost;
-    public int cooldown;
-    public int effectDuration;
-    public float baseValue;
+    [HideInInspector] public float energyCost;
+    [HideInInspector] public int cooldown;
+    [HideInInspector] public int effectDuration;
+    [HideInInspector] public float baseValue;
 
     [Header("Stat Scalings")]
-    public float powerScaling;
-    public float aidScaling;
-    public float techScaling;
+    [HideInInspector] public float powerScaling;
+    [HideInInspector] public float aidScaling;
+    [HideInInspector] public float techScaling;
 
-    public string skillDescription;
-    public string skillExtraInfo;
+    [HideInInspector] public string skillDescription;
+    [HideInInspector] public string skillExtraInfo;
 
     public void InitialSetup()
     {
@@ -40,7 +40,6 @@ public class SkillStats : MonoBehaviour
         techScaling = skillScriptable.techScaling;
 
         skillDescription = skillScriptable.skillDescription;
-        skillExtraInfo = skillScriptable.skillExtraInfo;
 
         skill = GetComponent<SkillBase>();
     }

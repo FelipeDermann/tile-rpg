@@ -21,6 +21,6 @@ MonoBehaviour:
   powerScaling: 1.2
   aidScaling: 0
   techScaling: 0
-  skillDescription: Deals [FinalDamage] to the three units in a vertical line in
-    front of you.
+  skillDescription: Deals [FinalDamage] damage to the three units in a vertical line
+    in front of you.
   skillExtraInfo: 
